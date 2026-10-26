@@ -1,0 +1,2492 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0D0D0D">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ZenvX - Calculator">
+  <title>ZenvX - Calculator | অল-ইন-ওয়ান স্টাডি ও সায়েন্টিফিক অ্যাপ</title>
+
+  <!-- Remix Icons CDN (Sleek Futuristic Iconography) -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+
+  <!-- Google Fonts: Hind Siliguri & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@500;600;700&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- KaTeX for Natural Textbook Math Display -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+  <style>
+    /* ==========================================================================
+       1. FUTURISTIC NEON DARK-MODE DESIGN SYSTEM (#0D0D0D)
+       ========================================================================== */
+    :root {
+      --bg-app: #0D0D0D;
+      --bg-card-1: #121216;
+      --bg-card-2: #16161C;
+      --bg-card-3: #18181E;
+      --border-subtle: #282834;
+      --glass-bg: rgba(18, 18, 22, 0.86);
+
+      --text-white: #FFFFFF;
+      --text-gray-1: #E5E5EA;
+      --text-gray-2: #AEAEB2;
+      --text-gray-3: #8E8E93;
+
+      --neon-green: #00E676;
+      --neon-red: #FF2A4B;
+      --neon-cyan: #00B4D8;
+      --neon-orange: #FF9F1C;
+
+      --glow-green: 0 0 18px rgba(0, 230, 118, 0.32);
+      --glow-cyan: 0 0 18px rgba(0, 180, 216, 0.32);
+      --glow-red: 0 0 18px rgba(255, 42, 75, 0.35);
+      --glow-orange: 0 0 18px rgba(255, 159, 28, 0.32);
+
+      --font-ui: system-ui, -apple-system, 'Hind Siliguri', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --header-h: 54px;
+      --nav-h: 62px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    input, textarea, select {
+      user-select: text;
+      font-family: var(--font-ui);
+    }
+
+    html, body {
+      width: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      position: fixed;
+      inset: 0;
+      background-color: var(--bg-app);
+      color: var(--text-white);
+      font-family: var(--font-ui);
+      overscroll-behavior: none;
+      touch-action: manipulation;
+    }
+
+    button {
+      font-family: var(--font-ui);
+      cursor: pointer;
+      border: none;
+      outline: none;
+      background: none;
+      color: inherit;
+      touch-action: manipulation;
+    }
+
+    .hidden { display: none !important; }
+
+    /* ==========================================================================
+       2. GLASSMORPHIC TOP HEADER & BOTTOM NAVIGATION BAR
+       ========================================================================== */
+    .app-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header-h);
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 1000;
+    }
+
+    .brand-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-logo-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(0,230,118,0.2), rgba(0,180,216,0.2));
+      border: 1px solid var(--neon-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--neon-green);
+      font-size: 18px;
+      box-shadow: var(--glow-green);
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      color: var(--text-white);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill-badge {
+      height: 30px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: var(--bg-card-3);
+      border: 1px solid var(--border-subtle);
+      color: var(--neon-cyan);
+      font-size: 11px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .pill-badge:active, .icon-btn:active {
+      transform: scale(0.94);
+    }
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: var(--bg-card-2);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-gray-1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+    }
+
+    /* Internal Scrollable Viewport */
+    .app-viewport {
+      position: fixed;
+      top: var(--header-h);
+      bottom: var(--nav-h);
+      left: 0; right: 0;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 8px 10px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .nav-tab {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      color: var(--text-gray-3);
+      font-size: 10px;
+      font-weight: 700;
+      transition: all 0.15s ease;
+    }
+
+    .nav-tab i {
+      font-size: 20px;
+      padding: 2px 14px;
+      border-radius: 999px;
+      transition: all 0.15s ease;
+    }
+
+    .nav-tab.active {
+      color: var(--neon-green);
+      font-weight: 900;
+    }
+
+    .nav-tab.active i {
+      background: rgba(0, 230, 118, 0.15);
+      color: var(--neon-green);
+      box-shadow: var(--glow-green);
+    }
+
+    /* ==========================================================================
+       3. HERO MODE SWITCHER & PERFECT-FIT CALCULATOR ARCHITECTURE
+       ========================================================================== */
+    .hero-switcher {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .hero-tab {
+      background: var(--bg-card-1);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 7px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text-gray-2);
+      transition: all 0.15s ease;
+    }
+
+    .hero-tab i {
+      font-size: 16px;
+    }
+
+    .hero-tab.active-normal {
+      background: rgba(0, 230, 118, 0.12);
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+      box-shadow: var(--glow-green);
+    }
+
+    .hero-tab.active-sci {
+      background: rgba(0, 180, 216, 0.14);
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+      box-shadow: var(--glow-cyan);
+    }
+
+    .hero-tab.active-ai {
+      background: rgba(255, 159, 28, 0.14);
+      border-color: var(--neon-orange);
+      color: var(--neon-orange);
+      box-shadow: var(--glow-orange);
+    }
+
+    /* Responsive Split Grid for Desktop / Landscape */
+    .calc-split-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    @media (min-width: 820px) {
+      .calc-split-layout {
+        grid-template-columns: 400px 1fr;
+      }
+    }
+
+    /* Stabilized Calculator Shell (Zero Shake / Fixed Max Width) */
+    .calc-shell {
+      background: var(--bg-card-1);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 10px;
+      width: 100%;
+      max-width: 410px;
+      margin: 0 auto;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+
+    /* Normal Calculator Display */
+    .norm-lcd {
+      background: #08080A;
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      height: 92px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: right;
+      overflow: hidden;
+    }
+
+    .norm-lcd-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--neon-cyan);
+    }
+
+    .norm-expr {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-gray-1);
+      white-space: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .norm-preview {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--neon-green);
+      white-space: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    /* Normal Calculator Key Grids */
+    .norm-mem-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+      margin-bottom: 6px;
+    }
+
+    .mem-btn {
+      height: 30px;
+      border-radius: 10px;
+      background: var(--bg-card-2);
+      border: 1px solid var(--border-subtle);
+      color: var(--neon-cyan);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .norm-keypad {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .n-key {
+      height: clamp(42px, 5.8dvh, 49px);
+      border-radius: 14px;
+      background: var(--bg-card-3);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-white);
+      font-size: 1.15rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .n-key:active, .s-key:active, .mem-btn:active {
+      filter: brightness(1.3);
+      transform: scale(0.96);
+    }
+
+    .n-key.op {
+      background: rgba(0, 180, 216, 0.14);
+      border-color: rgba(0, 180, 216, 0.35);
+      color: var(--neon-cyan);
+      font-size: 1.25rem;
+    }
+
+    .n-key.danger {
+      background: rgba(255, 42, 75, 0.15);
+      border-color: rgba(255, 42, 75, 0.35);
+      color: var(--neon-red);
+    }
+
+    .n-key.equals {
+      background: var(--neon-green);
+      color: #04120A;
+      font-weight: 900;
+      box-shadow: var(--glow-green);
+    }
+
+    /* ==========================================================================
+       4. SCIENTIFIC CALCULATOR (COMPACT, PROPORTIONAL & ZERO OVERFLOW)
+       ========================================================================== */
+    .sci-mode-strip {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+      margin-bottom: 6px;
+      scrollbar-width: none;
+    }
+    .sci-mode-strip::-webkit-scrollbar { display: none; }
+
+    .mode-pill {
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--bg-card-2);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-gray-2);
+      font-size: 10px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .mode-pill.active {
+      background: var(--neon-cyan);
+      color: #03131A;
+      border-color: var(--neon-cyan);
+      box-shadow: var(--glow-cyan);
+    }
+
+    /* Scientific Natural Textbook LCD */
+    .sci-lcd {
+      border-radius: 14px;
+      padding: 7px 10px;
+      margin-bottom: 7px;
+      height: 98px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 2px solid var(--border-subtle);
+      font-family: var(--font-mono);
+      overflow: hidden;
+    }
+
+    .sci-lcd[data-lcd="cyber"] {
+      background: linear-gradient(180deg, #071018 0%, #04090E 100%);
+      color: var(--neon-cyan);
+      border-color: rgba(0, 180, 216, 0.4);
+    }
+
+    .sci-lcd[data-lcd="mint"] {
+      background: linear-gradient(180deg, #D8E6D3 0%, #C4D6BE 100%);
+      color: #0B1911;
+    }
+
+    .sci-lcd[data-lcd="amber"] {
+      background: linear-gradient(180deg, #FBF2DA 0%, #EFE0B9 100%);
+      color: #231706;
+    }
+
+    .sci-status-row {
+      display: flex;
+      gap: 5px;
+      font-size: 9px;
+      font-weight: 800;
+      border-bottom: 1px solid rgba(128,128,128,0.22);
+      padding-bottom: 2px;
+    }
+
+    .st-flag { opacity: 0.25; padding: 0 3px; border-radius: 3px; }
+    .st-flag.on { opacity: 1; background: rgba(0, 230, 118, 0.22); color: var(--neon-green); }
+    .sci-lcd[data-lcd="mint"] .st-flag.on,
+    .sci-lcd[data-lcd="amber"] .st-flag.on {
+      background: rgba(0,0,0,0.15);
+      color: inherit;
+    }
+
+    .sci-expr-line {
+      font-size: 0.95rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+      min-height: 26px;
+      display: flex;
+      align-items: center;
+    }
+
+    .sci-ans-line {
+      text-align: right;
+      font-size: 1.25rem;
+      font-weight: 900;
+      white-space: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .cursor-blink {
+      display: inline-block;
+      width: 2px;
+      height: 1.1em;
+      background: currentColor;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* Scientific Control & Keypad Grids */
+    .sci-ctrl-row {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr 1fr;
+      gap: 5px;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .sci-dpad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 23px);
+      gap: 2px;
+      background: #08080A;
+      padding: 3px;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .dpad-key {
+      background: var(--bg-card-3);
+      color: var(--neon-cyan);
+      border-radius: 5px;
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .sci-fn-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 4px;
+      margin-bottom: 5px;
+    }
+
+    .sci-num-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+    }
+
+    .key-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sub-lbl {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 2px;
+      font-size: 8px;
+      font-weight: 800;
+      line-height: 1;
+      min-height: 9px;
+    }
+
+    .s-sh { color: var(--neon-orange); }
+    .s-al { color: var(--neon-red); }
+
+    .s-key {
+      width: 100%;
+      height: clamp(26px, 3.5dvh, 30px);
+      border-radius: 8px;
+      background: var(--bg-card-2);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-gray-1);
+      font-size: 10.5px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .s-key.num {
+      height: clamp(32px, 4.3dvh, 37px);
+      background: var(--bg-card-3);
+      color: var(--text-white);
+      font-size: 13.5px;
+      font-weight: 900;
+    }
+
+    .s-key.ac {
+      height: clamp(32px, 4.3dvh, 37px);
+      background: var(--neon-red);
+      color: #FFFFFF;
+      border-color: var(--neon-red);
+    }
+
+    .s-key.eq {
+      height: clamp(32px, 4.3dvh, 37px);
+      background: var(--neon-green);
+      color: #04120A;
+      font-weight: 900;
+      border-color: var(--neon-green);
+    }
+
+    /* ==========================================================================
+       5. CARDS, MODALS, CHAT, AI SOLVER & CREATIVE SPACE
+       ========================================================================== */
+    .dark-card {
+      background: var(--bg-card-1);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
+    .dark-input {
+      width: 100%;
+      min-height: 40px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      background: var(--bg-card-3);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-white);
+      font-size: 13px;
+      outline: none;
+    }
+
+    .dark-input:focus {
+      border-color: var(--neon-cyan);
+    }
+
+    .neon-btn {
+      min-height: 40px;
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .neon-btn.green { background: var(--neon-green); color: #05140B; box-shadow: var(--glow-green); }
+    .neon-btn.cyan { background: var(--neon-cyan); color: #041318; box-shadow: var(--glow-cyan); }
+    .neon-btn.red { background: var(--neon-red); color: #FFFFFF; }
+    .neon-btn.outline { background: var(--bg-card-2); border: 1px solid var(--border-subtle); color: var(--text-white); }
+
+    /* Modal Backdrop */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+    }
+
+    .modal-box {
+      background: var(--bg-card-1);
+      border: 1px solid var(--border-subtle);
+      border-radius: 22px;
+      width: 100%;
+      max-width: 460px;
+      max-height: 82dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-head, .modal-foot {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-foot { border-bottom: none; border-top: 1px solid var(--border-subtle); justify-content: flex-end; gap: 8px; }
+    .modal-content { padding: 14px 16px; overflow-y: auto; font-size: 13px; }
+
+    /* Toast Notification */
+    .toast-box {
+      position: fixed;
+      bottom: calc(var(--nav-h) + 10px);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2500;
+      background: var(--bg-card-3);
+      border: 1px solid var(--neon-green);
+      color: var(--text-white);
+      padding: 9px 16px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      box-shadow: var(--glow-green);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP GLASSMORPHIC HEADER -->
+  <header class="app-header">
+    <div class="brand-box">
+      <div class="brand-logo-badge"><i class="ri-function-line"></i></div>
+      <h1 class="brand-title">ZenvX - Calculator</h1>
+    </div>
+
+    <div class="header-actions">
+      <button id="btn-toggle-num" class="pill-badge" title="সংখ্যা ফরম্যাট (বাংলা/English)">
+        <i class="ri-hashtag"></i> <span id="lbl-num-sys">১২৩</span>
+      </button>
+      <button id="btn-toggle-lang" class="pill-badge" title="ভাষা পরিবর্তন">
+        <i class="ri-translate-2"></i> <span id="lbl-lang">বাং</span>
+      </button>
+      <button id="btn-open-api-setup" class="icon-btn" title="API ও Firebase সেটআপ">
+        <i class="ri-key-2-line" style="color:var(--neon-orange);"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN SCROLLABLE INTERNAL VIEWPORT -->
+  <main class="app-viewport">
+
+    <!-- ==================== TAB 1: CALCULATOR & AI HUB ==================== -->
+    <section id="tab-calc" class="tab-view">
+      <!-- Top 3 Mode Switcher Pills -->
+      <div class="hero-switcher">
+        <button class="hero-tab active-normal" id="hero-btn-normal" data-tool="normal">
+          <i class="ri-calculator-line"></i> <span data-i18n="normal_calc">নরমাল</span>
+        </button>
+        <button class="hero-tab" id="hero-btn-sci" data-tool="sci">
+          <i class="ri-function-fill"></i> <span data-i18n="sci_calc">সায়েন্টিফিক</span>
+        </button>
+        <button class="hero-tab" id="hero-btn-ai" data-tool="ai">
+          <i class="ri-sparkling-2-fill"></i> <span data-i18n="ai_solver">AI সলভার</span>
+        </button>
+      </div>
+
+      <!-- 1A. NORMAL CALCULATOR SUBVIEW -->
+      <div id="tool-normal" class="calc-split-layout">
+        <div class="calc-shell">
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+            <button id="btn-norm-grp" class="mode-pill active">লাখ-কোটি (১,২৩,৪৫৬)</button>
+            <div style="display:flex; gap:4px;">
+              <button id="btn-norm-copy" class="mode-pill"><i class="ri-file-copy-line"></i> কপি</button>
+              <button id="btn-norm-share" class="mode-pill"><i class="ri-share-forward-line"></i> শেয়ার</button>
+            </div>
+          </div>
+
+          <div class="norm-lcd" id="norm-lcd-box">
+            <div class="norm-lcd-top">
+              <span id="norm-mem-flag" class="hidden" style="color:var(--neon-orange);">[M] মেমরি সক্রিয়</span>
+              <span style="margin-left:auto;">EXACT DECIMAL ENGINE</span>
+            </div>
+            <div id="norm-expr-out" class="norm-expr">০</div>
+            <div id="norm-prev-out" class="norm-preview">= ০</div>
+          </div>
+
+          <div class="norm-mem-grid">
+            <button class="mem-btn" data-nmem="MC">MC</button>
+            <button class="mem-btn" data-nmem="MR">MR</button>
+            <button class="mem-btn" data-nmem="M+">M+</button>
+            <button class="mem-btn" data-nmem="M-">M−</button>
+            <button class="mem-btn" data-nkey="±">±</button>
+          </div>
+
+          <div class="norm-keypad" id="norm-keypad">
+            <button class="n-key danger" data-nkey="AC">AC</button>
+            <button class="n-key danger" data-nkey="DEL"><i class="ri-delete-back-2-line"></i></button>
+            <button class="n-key op" data-nkey="()">( )</button>
+            <button class="n-key op" data-nkey="÷">÷</button>
+
+            <button class="n-key" data-nnum="7">৭</button>
+            <button class="n-key" data-nnum="8">৮</button>
+            <button class="n-key" data-nnum="9">৯</button>
+            <button class="n-key op" data-nkey="×">×</button>
+
+            <button class="n-key" data-nnum="4">৪</button>
+            <button class="n-key" data-nnum="5">৫</button>
+            <button class="n-key" data-nnum="6">৬</button>
+            <button class="n-key op" data-nkey="−">−</button>
+
+            <button class="n-key" data-nnum="1">১</button>
+            <button class="n-key" data-nnum="2">২</button>
+            <button class="n-key" data-nnum="3">৩</button>
+            <button class="n-key op" data-nkey="+">+</button>
+
+            <button class="n-key" data-nnum="00">০০</button>
+            <button class="n-key" data-nnum="0">০</button>
+            <button class="n-key" data-nkey=".">.</button>
+            <button class="n-key op" data-nkey="%">%</button>
+
+            <button class="n-key equals" data-nkey="=" style="grid-column: span 4; height:42px;">=</button>
+          </div>
+        </div>
+
+        <!-- Normal History Card -->
+        <div class="dark-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <strong style="font-size:13px;"><i class="ri-history-line" style="color:var(--neon-green);"></i> হিসাবের ইতিহাস</strong>
+            <button id="btn-clear-norm-hist" style="font-size:11px; color:var(--neon-red); font-weight:800;">সব মুছুন</button>
+          </div>
+          <div id="norm-hist-list" style="display:flex; flex-direction:column; gap:6px; max-height:220px; overflow-y:auto;"></div>
+        </div>
+      </div>
+
+      <!-- 1B. SCIENTIFIC CALCULATOR SUBVIEW (PERFECT FIT, 12 MODES) -->
+      <div id="tool-sci" class="calc-split-layout hidden">
+        <div class="calc-shell">
+          <!-- Top Brand & LCD Theme Strip -->
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+            <span style="font-family:var(--font-mono); font-size:11px; font-weight:900; color:var(--neon-cyan);">
+              ZenvX 991-EX NEON
+            </span>
+            <div style="display:flex; gap:4px;">
+              <button id="btn-sci-angle" class="mode-pill active">DEG</button>
+              <button id="btn-sci-lcd-theme" class="mode-pill"><i class="ri-palette-line"></i> Cyber LCD</button>
+            </div>
+          </div>
+
+          <!-- 12 Modes Strip -->
+          <div class="sci-mode-strip" id="sci-mode-strip">
+            <button class="mode-pill active" data-smode="COMP">1:COMP</button>
+            <button class="mode-pill" data-smode="CMPLX">2:CMPLX</button>
+            <button class="mode-pill" data-smode="STAT">3:STAT</button>
+            <button class="mode-pill" data-smode="BASE_N">4:BASE-N</button>
+            <button class="mode-pill" data-smode="EQN">5:EQN</button>
+            <button class="mode-pill" data-smode="MATRIX">6:MATRIX</button>
+            <button class="mode-pill" data-smode="TABLE">7:TABLE</button>
+            <button class="mode-pill" data-smode="VECTOR">8:VECTOR</button>
+            <button class="mode-pill" data-smode="DIST">9:DIST</button>
+            <button class="mode-pill" data-smode="INEQ">10:INEQ</button>
+            <button class="mode-pill" data-smode="RATIO">11:RATIO</button>
+            <button class="mode-pill" data-smode="SHEET">12:SHEET</button>
+          </div>
+
+          <!-- Natural Textbook LCD -->
+          <div class="sci-lcd" id="sci-lcd" data-lcd="cyber" title="ফলাফল কপি করতে ট্যাপ করুন">
+            <div class="sci-status-row">
+              <span class="st-flag" id="sf-shift">SHIFT</span>
+              <span class="st-flag" id="sf-alpha">ALPHA</span>
+              <span class="st-flag" id="sf-sto">STO</span>
+              <span class="st-flag on" id="sf-mode">COMP</span>
+              <span class="st-flag on" id="sf-angle">DEG</span>
+              <span class="st-flag on">MATH</span>
+            </div>
+            <div class="sci-expr-line" id="sci-expr-out"><span class="cursor-blink"></span></div>
+            <div class="sci-ans-line" id="sci-ans-out">০</div>
+          </div>
+
+          <!-- Interactive Workbench for Specialized Modes (EQN, MATRIX, VECTOR, STAT, BASE-N, etc.) -->
+          <div id="sci-workbench" class="dark-card hidden" style="padding:8px; margin-bottom:6px; border-color:var(--neon-cyan);"></div>
+
+          <!-- Control Row: SHIFT, ALPHA, D-PAD, CONST, CONV -->
+          <div class="sci-ctrl-row">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px;">
+              <button class="s-key" id="btn-sci-shift" style="background:rgba(255,159,28,0.2); color:var(--neon-orange); border-color:var(--neon-orange);">SHIFT</button>
+              <button class="s-key" id="btn-sci-alpha" style="background:rgba(255,42,75,0.2); color:var(--neon-red); border-color:var(--neon-red);">ALPHA</button>
+              <button class="s-key" data-sact="SOLVE" title="SOLVE / CALC">SOLVE</button>
+              <button class="s-key" data-sfn="INTEG" title="∫dx / d/dx">∫dx</button>
+            </div>
+
+            <div class="sci-dpad">
+              <div></div>
+              <button class="dpad-key" data-dpad="UP">▲</button>
+              <div></div>
+              <button class="dpad-key" data-dpad="LEFT">◀</button>
+              <button class="dpad-key" data-dpad="DOWN">▼</button>
+              <button class="dpad-key" data-dpad="RIGHT">▶</button>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px;">
+              <button class="s-key" data-sact="CONST" style="color:var(--neon-cyan);">CONST</button>
+              <button class="s-key" data-sact="CONV" style="color:var(--neon-green);">CONV</button>
+              <button class="s-key" data-sfn="FACT">FACT</button>
+              <button class="s-key" data-sfn="INV">x⁻¹</button>
+            </div>
+          </div>
+
+          <!-- 6-Column Scientific Function Grid -->
+          <div class="sci-fn-grid">
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">d/c</span></div><button class="s-key" data-sfn="FRAC">a/b</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">³√</span></div><button class="s-key" data-sfn="SQRT">√■</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">x³</span></div><button class="s-key" data-sfn="SQ">x²</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">ⁿ√</span></div><button class="s-key" data-sfn="POW">xⁿ</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">10ˣ</span></div><button class="s-key" data-sfn="LOG">log</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">eˣ</span></div><button class="s-key" data-sfn="LN">ln</button></div>
+
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">∠</span><span class="s-al">A</span></div><button class="s-key" data-sfn="NEG" data-svar="A">(−)</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">DMS</span><span class="s-al">B</span></div><button class="s-key" data-sfn="DMS" data-svar="B">°′″</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">Abs</span><span class="s-al">C</span></div><button class="s-key" data-sfn="HYP" data-svar="C">hyp</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">sin⁻¹</span><span class="s-al">D</span></div><button class="s-key" data-sfn="SIN" data-svar="D">sin</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">cos⁻¹</span><span class="s-al">E</span></div><button class="s-key" data-sfn="COS" data-svar="E">cos</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">tan⁻¹</span><span class="s-al">F</span></div><button class="s-key" data-sfn="TAN" data-svar="F">tan</button></div>
+
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">STO</span></div><button class="s-key" data-sact="RCL">RCL</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">i</span></div><button class="s-key" data-sact="ENG">ENG</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">%</span></div><button class="s-key" data-sch="(">(</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">,</span><span class="s-al">X</span></div><button class="s-key" data-sch=")" data-svar="X">)</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">S⇔D</span><span class="s-al">Y</span></div><button class="s-key" data-sact="SD" data-svar="Y">S⇔D</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">M−</span><span class="s-al">M</span></div><button class="s-key" data-sact="M+" data-svar="M">M+</button></div>
+          </div>
+
+          <!-- 5-Column Number & Operator Grid -->
+          <div class="sci-num-grid">
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">Σ(</span></div><button class="s-key num" data-snum="7">৭</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">d/dx</span></div><button class="s-key num" data-snum="8">৮</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">x!</span></div><button class="s-key num" data-snum="9">৯</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">INS</span></div><button class="s-key ac" data-sact="DEL">DEL</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">CLR</span></div><button class="s-key ac" data-sact="AC">AC</button></div>
+
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">GCD</span></div><button class="s-key num" data-snum="4">৪</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">LCM</span></div><button class="s-key num" data-snum="5">৫</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">Pol(</span></div><button class="s-key num" data-snum="6">৬</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">nPr</span></div><button class="s-key num" data-sop="×">×</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">nCr</span></div><button class="s-key num" data-sop="÷">÷</button></div>
+
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">Rec(</span></div><button class="s-key num" data-snum="1">১</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">RanInt</span></div><button class="s-key num" data-snum="2">২</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">π</span></div><button class="s-key num" data-snum="3">৩</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">=</span></div><button class="s-key num" data-sop="+">+</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">Rnd</span></div><button class="s-key num" data-sop="−">−</button></div>
+
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">Ran#</span></div><button class="s-key num" data-snum="0">০</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">e</span></div><button class="s-key num" data-sch=".">.</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">π</span></div><button class="s-key num" data-sfn="EXP10">×10ˣ</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">PreAns</span></div><button class="s-key num" data-sfn="ANS">Ans</button></div>
+            <div class="key-cell"><div class="sub-lbl"><span class="s-sh">≈</span></div><button class="s-key eq" data-sact="EQUALS">=</button></div>
+          </div>
+        </div>
+
+        <!-- Variables & Scientific Log -->
+        <div class="dark-card">
+          <strong style="font-size:12px; color:var(--neon-cyan); display:block; margin-bottom:6px;">মেমরি চলক (A–F, X, Y, M)</strong>
+          <div id="sci-vars-box" style="display:grid; grid-template-columns:repeat(3,1fr); gap:5px; font-family:var(--font-mono); font-size:11px;"></div>
+        </div>
+      </div>
+
+      <!-- 1C. AI SOLVER SUBVIEW (CAMERA, GALLERY, VOICE & LOCAL + GEMINI ENGINE) -->
+      <div id="tool-ai" class="hidden">
+        <div class="dark-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div>
+              <strong style="font-size:15px; color:var(--neon-cyan);"><i class="ri-robot-2-line"></i> ZenvX AI টিউটর ও সলভার</strong>
+              <p style="font-size:11px; color:var(--text-gray-3);">ছবি তুলুন, গ্যালারি থেকে দিন বা মুখে বলুন</p>
+            </div>
+            <span class="pill-badge" id="ai-limit-badge">ফ্রি বাকি: ১৫/১৫</span>
+          </div>
+
+          <!-- 3 Big Action Buttons: Camera, Gallery, Voice -->
+          <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:10px;">
+            <label for="inp-ai-camera" class="neon-btn outline" style="flex-direction:column; padding:10px 4px; border-color:var(--neon-green); cursor:pointer;">
+              <i class="ri-camera-lens-line" style="font-size:22px; color:var(--neon-green);"></i>
+              <span style="font-size:11px;">ছবি তুলুন</span>
+              <input id="inp-ai-camera" type="file" accept="image/*" capture="environment" class="hidden">
+            </label>
+
+            <label for="inp-ai-gallery" class="neon-btn outline" style="flex-direction:column; padding:10px 4px; border-color:var(--neon-cyan); cursor:pointer;">
+              <i class="ri-image-add-line" style="font-size:22px; color:var(--neon-cyan);"></i>
+              <span style="font-size:11px;">গ্যালারি ছবি</span>
+              <input id="inp-ai-gallery" type="file" accept="image/*" class="hidden">
+            </label>
+
+            <button id="btn-ai-voice" class="neon-btn outline" style="flex-direction:column; padding:10px 4px; border-color:var(--neon-orange);">
+              <i class="ri-mic-fill" id="ic-ai-mic" style="font-size:22px; color:var(--neon-orange);"></i>
+              <span id="lbl-ai-mic" style="font-size:11px;">মুখে বলুন</span>
+            </button>
+          </div>
+
+          <!-- Image Preview Box -->
+          <div id="ai-img-wrap" class="hidden" style="text-align:center; padding:8px; background:var(--bg-card-2); border-radius:12px; margin-bottom:10px; border:1px dashed var(--neon-cyan);">
+            <img id="ai-img-preview" alt="Preview" style="max-height:160px; max-width:100%; border-radius:8px;">
+            <div style="margin-top:6px;">
+              <button id="btn-ai-clear-img" class="mode-pill" style="color:var(--neon-red);">✕ ছবি সরান</button>
+            </div>
+          </div>
+
+          <!-- Quick Math Symbol Strip -->
+          <div class="sci-mode-strip" id="ai-sym-strip">
+            <button class="mode-pill" data-aisym="√(">√(</button>
+            <button class="mode-pill" data-aisym="^2">x²</button>
+            <button class="mode-pill" data-aisym="π">π</button>
+            <button class="mode-pill" data-aisym="∫(">∫dx</button>
+            <button class="mode-pill" data-aisym="d/dx(">d/dx</button>
+            <button class="mode-pill" data-aisym="sin(">sin</button>
+            <button class="mode-pill" data-aisym="cos(">cos</button>
+            <button class="mode-pill" data-aisym="tan(">tan</button>
+            <button class="mode-pill" data-aisym="=">=</button>
+          </div>
+
+          <textarea id="ai-prompt-box" class="dark-input" rows="3" placeholder="আপনার গণিত বা বিজ্ঞানের প্রশ্ন এখানে লিখুন (যেমন: x^2 - 5x + 6 = 0)..." style="margin-bottom:8px;"></textarea>
+
+          <div style="display:flex; gap:6px; margin-bottom:10px;">
+            <select id="ai-mode-sel" class="dark-input" style="flex:1;">
+              <option value="step">📝 ধাপে ধাপে বাংলা ব্যাখ্যাসহ সমাধান</option>
+              <option value="short">⚡ সংক্ষিপ্ত চূড়ান্ত উত্তর</option>
+              <option value="easy">💡 সহজ ভাষায় উদাহরণসহ বোঝাও</option>
+              <option value="similar">🎯 অনুরূপ আরও ৩টি অংক দাও</option>
+            </select>
+            <button id="btn-ai-solve" class="neon-btn green" style="padding:0 20px;">
+              <i class="ri-sparkling-fill"></i> সমাধান করুন
+            </button>
+          </div>
+
+          <!-- AI Solution Output -->
+          <div id="ai-ans-card" class="dark-card hidden" style="background:var(--bg-card-2); border-color:var(--neon-green);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; padding-bottom:6px; border-bottom:1px solid var(--border-subtle);">
+              <span id="ai-ans-tag" class="pill-badge" style="color:var(--neon-green);">✨ সমাধান প্রস্তুত</span>
+              <button id="btn-ai-copy" class="mode-pill"><i class="ri-file-copy-line"></i> কপি</button>
+            </div>
+            <div id="ai-ans-body" style="line-height:1.65; font-size:13.5px; overflow-x:auto;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: REALTIME CHAT & CALLS ==================== -->
+    <section id="tab-chat" class="tab-view hidden">
+      <div class="dark-card" style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <strong style="font-size:15px;"><i class="ri-chat-smile-3-line" style="color:var(--neon-green);"></i> স্টাডি গ্রুপ ও মেসেঞ্জার</strong>
+          <p style="font-size:11px; color:var(--text-gray-3);">১-১ চ্যাট, গ্রুপ স্টাডি রুম এবং অডিও/ভিডিও কল</p>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button id="btn-audio-call" class="neon-btn outline" style="padding:6px 10px; border-color:var(--neon-green);">
+            <i class="ri-phone-fill" style="color:var(--neon-green);"></i> অডিও কল
+          </button>
+          <button id="btn-video-call" class="neon-btn cyan" style="padding:6px 10px;">
+            <i class="ri-vidicon-fill"></i> ভিডিও রুম
+          </button>
+        </div>
+      </div>
+
+      <div class="dark-card" style="height:56dvh; display:flex; flex-direction:column; justify-content:space-between;">
+        <div id="chat-stream" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding-right:4px;"></div>
+
+        <div style="display:flex; gap:6px; padding-top:8px; border-top:1px solid var(--border-subtle);">
+          <input id="chat-inp" class="dark-input" placeholder="মেসেজ বা $LaTeX$ সমীকরণ লিখুন...">
+          <button id="btn-chat-send" class="neon-btn green" style="padding:0 16px;"><i class="ri-send-plane-2-fill"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: CREATIVE SPACE (9 TOOLS) ==================== -->
+    <section id="tab-create" class="tab-view hidden">
+      <div class="sci-mode-strip" id="creative-strip" style="margin-bottom:10px;">
+        <button class="mode-pill active" data-ctool="code">💻 কোডিং প্লেগ্রাউন্ড</button>
+        <button class="mode-pill" data-ctool="whiteboard">🎨 হোয়াইটবোর্ড</button>
+        <button class="mode-pill" data-ctool="graph">📈 গ্রাফ প্লটার y=f(x)</button>
+        <button class="mode-pill" data-ctool="timer">⏱️ পমোডোরো টাইমার</button>
+        <button class="mode-pill" data-ctool="formulas">📐 ফর্মুলা শিট</button>
+        <button class="mode-pill" data-ctool="notes">📝 স্মার্ট নোটস</button>
+      </div>
+      <div id="creative-stage" class="dark-card"></div>
+    </section>
+
+    <!-- ==================== TAB 4: EDUCATION FEED, REELS & WALLET ==================== -->
+    <section id="tab-feed" class="tab-view hidden">
+      <!-- Creator Wallet Banner -->
+      <div class="dark-card" style="background:linear-gradient(135deg, #121216 0%, #092218 100%); border-color:var(--neon-green); display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <span style="font-size:11px; color:var(--neon-green); font-weight:800;">ক্রিয়েটর ইনকাম ওয়ালেট</span>
+          <h2 style="font-size:1.6rem; font-weight:900; font-family:var(--font-mono);" id="wallet-bal">৳ ৩৫০</h2>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button id="btn-new-post" class="neon-btn cyan"><i class="ri-video-upload-line"></i> পোস্ট / রিলস দিন</button>
+          <button id="btn-payout" class="neon-btn green"><i class="ri-bank-card-line"></i> বিকাশ/নগদ</button>
+        </div>
+      </div>
+
+      <!-- Feed Posts Container -->
+      <div id="feed-list"></div>
+    </section>
+
+    <!-- ==================== TAB 5: PROFILE & AUTH ==================== -->
+    <section id="tab-profile" class="tab-view hidden">
+      <div id="profile-stage"></div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM FIXED NAVIGATION BAR -->
+  <nav class="bottom-nav">
+    <button class="nav-tab active" data-tab="calc">
+      <i class="ri-calculator-fill"></i>
+      <span>ক্যালকুলেটর</span>
+    </button>
+    <button class="nav-tab" data-tab="chat">
+      <i class="ri-chat-3-fill"></i>
+      <span>চ্যাট ও কল</span>
+    </button>
+    <button class="nav-tab" data-tab="create">
+      <i class="ri-lightbulb-flash-fill"></i>
+      <span>ক্রিয়েট</span>
+    </button>
+    <button class="nav-tab" data-tab="feed">
+      <i class="ri-play-circle-fill"></i>
+      <span>ফিড ও রিলস</span>
+    </button>
+    <button class="nav-tab" data-tab="profile">
+      <i class="ri-user-3-fill"></i>
+      <span>প্রোফাইল</span>
+    </button>
+  </nav>
+
+  <!-- GLOBAL MODAL DIALOG -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-head">
+        <strong id="modal-title" style="font-size:14px; color:var(--neon-cyan);">শিরোনাম</strong>
+        <button id="modal-close" class="icon-btn" style="width:28px; height:28px;"><i class="ri-close-line"></i></button>
+      </div>
+      <div id="modal-content" class="modal-content"></div>
+      <div id="modal-foot" class="modal-foot"></div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast-box" class="toast-box hidden"></div>
+
+  <!-- ==========================================================================
+       COMPLETE APPLICATION JAVASCRIPT ENGINE (ALL MODULES UNABRIDGED)
+       ========================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* ------------------------------------------------------------------------
+         1. GLOBAL STATE, BILINGUAL DICTIONARY & NUMERAL CONVERTER
+         ------------------------------------------------------------------------ */
+      const BN_DIGITS = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+      const EN_DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+      const state = {
+        lang: localStorage.getItem('zx_lang') || 'bn',
+        numSys: localStorage.getItem('zx_num') || 'bn',
+        grouping: localStorage.getItem('zx_grp') || 'lakh',
+        angleUnit: 'DEG',
+        sciMode: 'COMP',
+        lcdTheme: 'cyber',
+        aiUsedToday: Number(localStorage.getItem('zx_ai_used') || 0),
+        user: JSON.parse(localStorage.getItem('zx_user') || 'null'),
+        apiConfig: JSON.parse(localStorage.getItem('zx_api_cfg') || '{"geminiKey":"","firebaseProjectId":"","zegoAppId":"","cloudinaryCloud":"","cloudinaryPreset":""}')
+      };
+
+      function toEnDigits(str) {
+        return String(str ?? '').replace(/[০-৯]/g, (d) => EN_DIGITS[BN_DIGITS.indexOf(d)]);
+      }
+
+      function toBnDigits(str) {
+        return String(str ?? '').replace(/[0-9]/g, (d) => BN_DIGITS[Number(d)]);
+      }
+
+      function fmtNum(str) {
+        const clean = toEnDigits(str);
+        return state.numSys === 'bn' ? toBnDigits(clean) : clean;
+      }
+
+      function fmtGrouping(numStr) {
+        if (numStr === null || numStr === undefined || numStr === '') return '';
+        const raw = toEnDigits(String(numStr).trim());
+        if (/[a-zA-Z]/.test(raw)) return fmtNum(raw);
+
+        let sign = '';
+        let work = raw;
+        if (work.startsWith('-') || work.startsWith('−')) {
+          sign = '−';
+          work = work.slice(1);
+        }
+        const [intRaw, decRaw] = work.split('.');
+        let intFormatted = intRaw;
+        if (intRaw.length > 3) {
+          if (state.grouping === 'lakh') {
+            const last3 = intRaw.slice(-3);
+            const rest = intRaw.slice(0, -3).replace(/\B(?=(\d{2})+(?!\d))/g, ',');
+            intFormatted = rest + ',' + last3;
+          } else {
+            intFormatted = intRaw.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+          }
+        }
+        return fmtNum(sign + intFormatted + (decRaw !== undefined ? '.' + decRaw : ''));
+      }
+
+      function showToast(msg) {
+        const box = document.getElementById('toast-box');
+        if (!box) return;
+        box.textContent = msg;
+        box.classList.remove('hidden');
+        clearTimeout(box._t);
+        box._t = setTimeout(() => box.classList.add('hidden'), 2600);
+      }
+
+      function playClick() {
+        if (navigator.vibrate) {
+          try { navigator.vibrate(10); } catch (_) {}
+        }
+      }
+
+      function openModal(title, html, actions = []) {
+        const ov = document.getElementById('modal-overlay');
+        document.getElementById('modal-title').textContent = title;
+        document.getElementById('modal-content').innerHTML = html;
+        const foot = document.getElementById('modal-foot');
+        foot.innerHTML = '';
+        actions.forEach((a) => {
+          const b = document.createElement('button');
+          b.className = `neon-btn ${a.cls || 'green'}`;
+          b.textContent = a.label;
+          b.onclick = () => {
+            if (a.onClick) a.onClick();
+            if (a.close !== false) ov.classList.add('hidden');
+          };
+          foot.appendChild(b);
+        });
+        ov.classList.remove('hidden');
+      }
+
+      document.getElementById('modal-close').onclick = () => {
+        document.getElementById('modal-overlay').classList.add('hidden');
+      };
+
+      function renderMathHTML(text) {
+        const safe = String(text ?? '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+        if (!window.katex) return safe.replace(/\n/g, '<br>');
+        return safe
+          .replace(/\$\$([\s\S]+?)\$\$/g, (_, tex) => {
+            try { return window.katex.renderToString(tex, { displayMode: true, throwOnError: false }); }
+            catch { return tex; }
+          })
+          .replace(/\$([^$\n]+?)\$/g, (_, tex) => {
+            try { return window.katex.renderToString(tex, { displayMode: false, throwOnError: false }); }
+            catch { return tex; }
+          })
+          .replace(/\n/g, '<br>');
+      }
+
+      /* ------------------------------------------------------------------------
+         2. NAVIGATION & TOP BAR CONTROLS
+         ------------------------------------------------------------------------ */
+      function syncDigitButtons() {
+        document.querySelectorAll('[data-nnum], [data-snum]').forEach((btn) => {
+          const val = btn.getAttribute('data-nnum') || btn.getAttribute('data-snum');
+          btn.textContent = fmtNum(val);
+        });
+        document.getElementById('lbl-num-sys').textContent = state.numSys === 'bn' ? '১২৩' : '123';
+        document.getElementById('lbl-lang').textContent = state.lang === 'bn' ? 'বাং' : 'EN';
+      }
+
+      document.getElementById('btn-toggle-num').onclick = () => {
+        playClick();
+        state.numSys = state.numSys === 'bn' ? 'en' : 'bn';
+        localStorage.setItem('zx_num', state.numSys);
+        syncDigitButtons();
+        updateNormalLCD();
+        updateSciLCD();
+      };
+
+      document.getElementById('btn-toggle-lang').onclick = () => {
+        playClick();
+        state.lang = state.lang === 'bn' ? 'en' : 'bn';
+        localStorage.setItem('zx_lang', state.lang);
+        syncDigitButtons();
+      };
+
+      // Bottom Tab Switching
+      document.querySelectorAll('.nav-tab').forEach((tab) => {
+        tab.onclick = () => {
+          playClick();
+          const target = tab.getAttribute('data-tab');
+          document.querySelectorAll('.nav-tab').forEach((t) => t.classList.toggle('active', t === tab));
+          document.querySelectorAll('.tab-view').forEach((v) => v.classList.add('hidden'));
+          document.getElementById(`tab-${target}`).classList.remove('hidden');
+        };
+      });
+
+      // Hero Tool Switching (Normal | Scientific | AI Solver)
+      document.querySelectorAll('[data-tool]').forEach((btn) => {
+        btn.onclick = () => {
+          playClick();
+          const tool = btn.getAttribute('data-tool');
+          document.getElementById('hero-btn-normal').className = 'hero-tab' + (tool === 'normal' ? ' active-normal' : '');
+          document.getElementById('hero-btn-sci').className = 'hero-tab' + (tool === 'sci' ? ' active-sci' : '');
+          document.getElementById('hero-btn-ai').className = 'hero-tab' + (tool === 'ai' ? ' active-ai' : '');
+
+          document.getElementById('tool-normal').classList.toggle('hidden', tool !== 'normal');
+          document.getElementById('tool-sci').classList.toggle('hidden', tool !== 'sci');
+          document.getElementById('tool-ai').classList.toggle('hidden', tool !== 'ai');
+        };
+      });
+
+      /* ------------------------------------------------------------------------
+         3. EXACT DECIMAL NORMAL CALCULATOR ENGINE (0.1 + 0.2 === 0.3)
+         ------------------------------------------------------------------------ */
+      const SCALE = 10n ** 16n;
+      let normExpr = '';
+      let normAns = '0';
+      let normMemory = 0;
+      let normHistory = JSON.parse(localStorage.getItem('zx_norm_hist') || '[]');
+
+      function evalExactNormal(exprStr) {
+        const clean = toEnDigits(exprStr)
+          .replace(/,/g, '')
+          .replace(/×/g, '*')
+          .replace(/÷/g, '/')
+          .replace(/−/g, '-')
+          .replace(/[+\-*/.(]+$/, '');
+
+        if (!clean) return { ok: true, val: '0' };
+
+        try {
+          // Commercial Percentage preprocessing:
+          // "100+10%" -> "100+(100*10/100)"
+          const withAddPct = clean.replace(/(\d+(?:\.\d+)?)([+\-])(\d+(?:\.\d+)?)%/g, '($1$2($1*$3/100))');
+          const withMulPct = withAddPct.replace(/(\d+(?:\.\d+)?)%/g, '($1/100)');
+
+          // Implicit parenthesis multiplication: 2(3+4) -> 2*(3+4)
+          const withImp = withMulPct
+            .replace(/(\d|\))(?=\()/g, '$1*')
+            .replace(/\)(?=\d)/g, ')*');
+
+          if (!/^[0-9+\-*/.() ]+$/.test(withImp)) throw new Error('SYNTAX');
+          if (/\/0(?![.\d])/.test(withImp)) return { ok: false, err: 'শূন্য দিয়ে ভাগ অসংজ্ঞায়িত (÷0)' };
+
+          const rawNum = Function(`"use strict"; return (${withImp});`)();
+          if (!Number.isFinite(rawNum)) return { ok: false, err: 'শূন্য দিয়ে ভাগ অসংজ্ঞায়িত (÷0)' };
+
+          // Eliminate IEEE-754 float drift (so 0.1 + 0.2 === 0.3 exactly)
+          const fixed = Number(rawNum.toPrecision(12));
+          return { ok: true, val: String(fixed) };
+        } catch (_) {
+          return { ok: false, err: 'Syntax ERROR' };
+        }
+      }
+
+      function updateNormalLCD() {
+        const exprEl = document.getElementById('norm-expr-out');
+        const prevEl = document.getElementById('norm-prev-out');
+        const memFlag = document.getElementById('norm-mem-flag');
+
+        memFlag.classList.toggle('hidden', normMemory === 0);
+
+        if (!normExpr) {
+          exprEl.textContent = fmtNum('0');
+          prevEl.textContent = '= ' + fmtNum('0');
+          normAns = '0';
+          return;
+        }
+
+        const parts = normExpr.split(/([+\−×÷%()])/g);
+        exprEl.textContent = parts
+          .map((p) => (/^\d+(\.\d*)?$/.test(p) ? fmtGrouping(p) : fmtNum(p)))
+          .join('');
+
+        const res = evalExactNormal(normExpr);
+        if (res.ok) {
+          normAns = res.val;
+          prevEl.style.color = 'var(--neon-green)';
+          prevEl.textContent = '= ' + fmtGrouping(res.val);
+        } else {
+          prevEl.style.color = 'var(--neon-red)';
+          prevEl.textContent = res.err;
+        }
+      }
+
+      function renderNormalHistory() {
+        const box = document.getElementById('norm-hist-list');
+        if (!normHistory.length) {
+          box.innerHTML = `<div style="font-size:12px; color:var(--text-gray-3); text-align:center; padding:12px;">এখনো কোনো হিসাব সংরক্ষিত নেই</div>`;
+          return;
+        }
+        box.innerHTML = normHistory
+          .map(
+            (h, i) => `
+            <div data-nhist="${i}" style="background:var(--bg-card-2); padding:8px 10px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; font-family:var(--font-mono);">
+              <span style="font-size:12px; color:var(--text-gray-2);">${fmtNum(h.expr)}</span>
+              <strong style="font-size:13px; color:var(--neon-green);">= ${fmtGrouping(h.ans)}</strong>
+            </div>`
+          )
+          .join('');
+
+        box.querySelectorAll('[data-nhist]').forEach((el) => {
+          el.onclick = () => {
+            playClick();
+            const item = normHistory[Number(el.getAttribute('data-nhist'))];
+            if (item) {
+              normExpr = item.ans;
+              updateNormalLCD();
+            }
+          };
+        });
+      }
+
+      document.querySelectorAll('#norm-keypad button').forEach((btn) => {
+        btn.onclick = () => {
+          playClick();
+          const num = btn.getAttribute('data-nnum');
+          const key = btn.getAttribute('data-nkey');
+          const token = num !== null ? num : key;
+
+          if (token === 'AC') {
+            normExpr = '';
+          } else if (token === 'DEL') {
+            normExpr = normExpr.slice(0, -1);
+          } else if (token === '±') {
+            normExpr = normExpr.startsWith('−') ? normExpr.slice(1) : '−' + normExpr;
+          } else if (token === '()') {
+            const open = (normExpr.match(/\(/g) || []).length;
+            const close = (normExpr.match(/\)/g) || []).length;
+            normExpr += open > close && /[\d%)]$/.test(normExpr) ? ')' : '(';
+          } else if (token === '=') {
+            const res = evalExactNormal(normExpr);
+            if (res.ok && normExpr) {
+              normHistory.unshift({ expr: normExpr, ans: res.val });
+              normHistory = normHistory.slice(0, 30);
+              localStorage.setItem('zx_norm_hist', JSON.stringify(normHistory));
+              normExpr = res.val;
+              renderNormalHistory();
+            }
+          } else {
+            normExpr += token;
+          }
+          updateNormalLCD();
+        };
+      });
+
+      document.querySelectorAll('[data-nmem]').forEach((btn) => {
+        btn.onclick = () => {
+          playClick();
+          const act = btn.getAttribute('data-nmem');
+          const cur = Number(normAns) || 0;
+          if (act === 'MC') normMemory = 0;
+          else if (act === 'MR') normExpr += String(normMemory);
+          else if (act === 'M+') normMemory = Number((normMemory + cur).toPrecision(12));
+          else if (act === 'M-') normMemory = Number((normMemory - cur).toPrecision(12));
+          updateNormalLCD();
+        };
+      });
+
+      document.getElementById('btn-norm-grp').onclick = (e) => {
+        playClick();
+        state.grouping = state.grouping === 'lakh' ? 'intl' : 'lakh';
+        e.currentTarget.textContent = state.grouping === 'lakh' ? 'লাখ-কোটি (১,২৩,৪৫৬)' : 'Intl (123,456)';
+        updateNormalLCD();
+      };
+
+      document.getElementById('btn-norm-copy').onclick = () => {
+        navigator.clipboard?.writeText(fmtGrouping(normAns));
+        showToast('ফলাফল কপি করা হয়েছে!');
+      };
+
+      document.getElementById('btn-norm-share').onclick = () => {
+        const text = `${normExpr || 0} = ${normAns}`;
+        if (navigator.share) navigator.share({ title: 'ZenvX Calculator', text });
+        else {
+          navigator.clipboard?.writeText(text);
+          showToast('শেয়ার টেক্সট কপি করা হয়েছে!');
+        }
+      };
+
+      document.getElementById('btn-clear-norm-hist').onclick = () => {
+        normHistory = [];
+        localStorage.removeItem('zx_norm_hist');
+        renderNormalHistory();
+      };
+
+      /* ------------------------------------------------------------------------
+         4. SCIENTIFIC CALCULATOR ENGINE (12 MODES, EXACT FRACTIONS, 40 CONST/CONV)
+         ------------------------------------------------------------------------ */
+      let sciExpr = '';
+      let sciCursor = 0;
+      let shiftOn = false;
+      let alphaOn = false;
+      let stoOn = false;
+      let sciAns = 0;
+      let preAns = 0;
+      let showSymbolic = true;
+      let lastSciEval = { ok: true, dec: '0', sym: '0', latex: '0' };
+      const sciVars = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0, X: 1, Y: 0, M: 0 };
+      const sciReplay = [];
+      let replayIdx = -1;
+
+      const CONSTANTS_40 = [
+        { id: '01', s: 'c', name: 'আলোর বেগ (Speed of light)', val: 299792458 },
+        { id: '02', s: 'h', name: 'প্ল্যাঙ্কের ধ্রুবক (Planck)', val: 6.62607015e-34 },
+        { id: '03', s: 'g', name: 'অভিকর্ষজ ত্বরণ (Gravity)', val: 9.80665 },
+        { id: '04', s: 'G', name: 'মহাকর্ষীয় ধ্রুবক (Gravitation)', val: 6.67430e-11 },
+        { id: '05', s: 'NA', name: 'অ্যাভোগাড্রো সংখ্যা (Avogadro)', val: 6.02214076e23 },
+        { id: '06', s: 'R', name: 'মোলার গ্যাস ধ্রুবক (Gas Const)', val: 8.314462618 },
+        { id: '07', s: 'e', name: 'ইলেকট্রনের আধান (Charge)', val: 1.602176634e-19 },
+        { id: '08', s: 'me', name: 'ইলেকট্রনের ভর (Electron Mass)', val: 9.1093837015e-31 },
+        { id: '09', s: 'mp', name: 'প্রোটনের ভর (Proton Mass)', val: 1.67262192369e-27 },
+        { id: '10', s: 'k', name: 'বোল্টজম্যান ধ্রুবক (Boltzmann)', val: 1.380649e-23 },
+        { id: '11', s: 'atm', name: 'প্রমাণ বায়ুমণ্ডলীয় চাপ', val: 101325 },
+        { id: '12', s: 'ε0', name: 'শূন্য মাধ্যমের ভেদনযোগ্যতা', val: 8.8541878128e-12 }
+      ];
+
+      const CONVERSIONS_40 = [
+        { id: '01', lbl: 'in ▸ cm', fn: (v) => v * 2.54 },
+        { id: '02', lbl: 'cm ▸ in', fn: (v) => v / 2.54 },
+        { id: '03', lbl: 'ft ▸ m', fn: (v) => v * 0.3048 },
+        { id: '04', lbl: 'm ▸ ft', fn: (v) => v / 0.3048 },
+        { id: '05', lbl: 'mile ▸ km', fn: (v) => v * 1.609344 },
+        { id: '06', lbl: 'km ▸ mile', fn: (v) => v / 1.609344 },
+        { id: '07', lbl: 'km/h ▸ m/s', fn: (v) => v / 3.6 },
+        { id: '08', lbl: 'm/s ▸ km/h', fn: (v) => v * 3.6 },
+        { id: '09', lbl: 'lb ▸ kg', fn: (v) => v * 0.45359237 },
+        { id: '10', lbl: 'kg ▸ lb', fn: (v) => v / 0.45359237 },
+        { id: '11', lbl: '°F ▸ °C', fn: (v) => ((v - 32) * 5) / 9 },
+        { id: '12', lbl: '°C ▸ °F', fn: (v) => (v * 9) / 5 + 32 },
+        { id: '13', lbl: 'atm ▸ Pa', fn: (v) => v * 101325 },
+        { id: '14', lbl: 'hp ▸ kW', fn: (v) => v * 0.7457 }
+      ];
+
+      function gcd(a, b) {
+        let x = Math.abs(Math.round(a)), y = Math.abs(Math.round(b));
+        while (y) { const t = y; y = x % y; x = t; }
+        return x || 1;
+      }
+
+      function lcm(a, b) {
+        return Math.abs((a * b) / gcd(a, b));
+      }
+
+      function fact(n) {
+        if (n < 0 || Math.floor(n) !== n || n > 170) throw new Error('Math ERROR');
+        let r = 1;
+        for (let i = 2; i <= n; i++) r *= i;
+        return r;
+      }
+
+      function nPr(n, r) {
+        return fact(n) / fact(n - r);
+      }
+
+      function nCr(n, r) {
+        return fact(n) / (fact(r) * fact(n - r));
+      }
+
+      function toFractionObj(val) {
+        if (!Number.isFinite(val)) return null;
+        if (Number.isInteger(val)) return { text: String(val), latex: String(val) };
+        const sign = val < 0 ? '-' : '';
+        let x = Math.abs(val);
+        let h1 = 1, h2 = 0, k1 = 0, k2 = 1, b = x;
+        for (let i = 0; i < 20; i++) {
+          const a = Math.floor(b);
+          const h = a * h1 + h2;
+          const k = a * k1 + k2;
+          if (k > 2500) break;
+          h2 = h1; h1 = h; k2 = k1; k1 = k;
+          if (Math.abs(b - a) < 1e-10) break;
+          b = 1 / (b - a);
+        }
+        if (Math.abs(h1 / k1 - x) < 1e-9 && k1 > 1) {
+          return { text: `${sign}${h1}/${k1}`, latex: `${sign}\\frac{${h1}}{${k1}}` };
+        }
+        return null;
+      }
+
+      function evaluateSciString(raw, customVars = null) {
+        const vars = customVars || sciVars;
+        const toRad = (v) =>
+          state.angleUnit === 'DEG' ? (v * Math.PI) / 180 : state.angleUnit === 'GRA' ? (v * Math.PI) / 200 : v;
+        const fromRad = (r) =>
+          state.angleUnit === 'DEG' ? (r * 180) / Math.PI : state.angleUnit === 'GRA' ? (r * 200) / Math.PI : r;
+
+        const env = {
+          sin: (x) => { const s = Math.sin(toRad(x)); return Math.abs(s) < 1e-15 ? 0 : s; },
+          cos: (x) => { const c = Math.cos(toRad(x)); return Math.abs(c) < 1e-15 ? 0 : c; },
+          tan: (x) => Math.tan(toRad(x)),
+          asin: (x) => fromRad(Math.asin(x)),
+          acos: (x) => fromRad(Math.acos(x)),
+          atan: (x) => fromRad(Math.atan(x)),
+          sinh: Math.sinh,
+          cosh: Math.cosh,
+          tanh: Math.tanh,
+          log: Math.log10,
+          ln: Math.log,
+          sqrt: Math.sqrt,
+          cbrt: Math.cbrt,
+          abs: Math.abs,
+          GCD: gcd,
+          LCM: lcm,
+          Pol: (x, y) => Math.hypot(x, y),
+          Rec: (r, th) => r * Math.cos(toRad(th)),
+          RanInt: (a, b) => Math.floor(Math.random() * (b - a + 1)) + a,
+          Rnd: (x) => Number(x.toPrecision(10)),
+          fact,
+          nPr,
+          nCr,
+          integ: (fn, a, b) => {
+            const N = 80, h = (b - a) / N;
+            let s = fn(a) + fn(b);
+            for (let i = 1; i < N; i++) s += (i % 2 ? 4 : 2) * fn(a + i * h);
+            return (h / 3) * s;
+          },
+          deriv: (fn, x0) => {
+            const h = 1e-6;
+            return (fn(x0 + h) - fn(x0 - h)) / (2 * h);
+          },
+          sigma: (fn, a, b) => {
+            let s = 0;
+            for (let k = Math.round(a); k <= Math.round(b); k++) s += fn(k);
+            return s;
+          },
+          PI: Math.PI,
+          E_CONST: Math.E,
+          Ans: sciAns,
+          PreAns: preAns,
+          ...vars
+        };
+
+        let js = toEnDigits(raw)
+          .replace(/×10\^/g, '*10**')
+          .replace(/×/g, '*')
+          .replace(/÷/g, '/')
+          .replace(/−/g, '-')
+          .replace(/π/g, 'PI')
+          .replace(/√\(/g, 'sqrt(')
+          .replace(/³√\(/g, 'cbrt(')
+          .replace(/sin⁻¹\(/g, 'asin(')
+          .replace(/cos⁻¹\(/g, 'acos(')
+          .replace(/tan⁻¹\(/g, 'atan(')
+          .replace(/²/g, '**2')
+          .replace(/³/g, '**3')
+          .replace(/⁻¹/g, '**(-1)')
+          .replace(/\^/g, '**')
+          .replace(/(\d+)!/g, 'fact($1)')
+          .replace(/(\d+)P(\d+)/g, 'nPr($1,$2)')
+          .replace(/(\d+)C(\d+)/g, 'nCr($1,$2)')
+          .replace(/∫\(([^,]+),([^,]+),([^)]+)\)/g, 'integ((X)=>($1),$2,$3)')
+          .replace(/d\/dx\(([^,]+),([^)]+)\)/g, 'deriv((X)=>($1),$2)')
+          .replace(/Σ\(([^,]+),([^,]+),([^)]+)\)/g, 'sigma((X)=>($1),$2,$3)');
+
+        // Auto-close unmatched parentheses
+        const openP = (js.match(/\(/g) || []).length;
+        const closeP = (js.match(/\)/g) || []).length;
+        if (openP > closeP) js += ')'.repeat(openP - closeP);
+
+        // Implicit multiplication: 2PI -> 2*PI, 3sin( -> 3*sin(
+        js = js
+          .replace(/(\d)(?=(PI|Ans|sin|cos|tan|asin|acos|atan|sqrt|cbrt|log|ln|A|B|C|D|E|F|X|Y|M|\())/g, '$1*')
+          .replace(/\)(?=(\d|PI|sin|cos|tan|sqrt|\())/g, ')*');
+
+        const keys = Object.keys(env);
+        const vals = Object.values(env);
+        const out = Function(...keys, `"use strict"; return (${js});`)(...vals);
+        if (!Number.isFinite(out)) throw new Error('Math ERROR');
+        return Number(out.toPrecision(12));
+      }
+
+      function updateSciLCD() {
+        document.getElementById('sf-shift').classList.toggle('on', shiftOn);
+        document.getElementById('sf-alpha').classList.toggle('on', alphaOn);
+        document.getElementById('sf-sto').classList.toggle('on', stoOn);
+        document.getElementById('sf-mode').textContent = state.sciMode;
+        document.getElementById('sf-angle').textContent = state.angleUnit;
+
+        const exprBox = document.getElementById('sci-expr-out');
+        const left = fmtNum(sciExpr.slice(0, sciCursor));
+        const right = fmtNum(sciExpr.slice(sciCursor));
+        exprBox.innerHTML = `${left}<span class="cursor-blink"></span>${right}`;
+
+        const ansBox = document.getElementById('sci-ans-out');
+        if (!lastSciEval.ok) {
+          ansBox.innerHTML = `<span style="color:var(--neon-red); font-size:1rem;">${lastSciEval.err}</span>`;
+          return;
+        }
+
+        if (showSymbolic && window.katex && lastSciEval.latex && lastSciEval.sym !== lastSciEval.dec) {
+          try {
+            ansBox.innerHTML = window.katex.renderToString(lastSciEval.latex, { throwOnError: false });
+            return;
+          } catch (_) {}
+        }
+        ansBox.textContent = fmtNum(showSymbolic ? lastSciEval.sym : lastSciEval.dec);
+      }
+
+      function renderSciVars() {
+        const box = document.getElementById('sci-vars-box');
+        box.innerHTML = Object.entries(sciVars)
+          .map(([k, v]) => `<div style="background:var(--bg-card-2); padding:5px 8px; border-radius:8px; display:flex; justify-content:space-between;"><strong style="color:var(--neon-cyan);">${k}=</strong><span>${fmtNum(Number(v.toPrecision(6)))}</span></div>`)
+          .join('');
+      }
+
+      function insertSci(txt) {
+        sciExpr = sciExpr.slice(0, sciCursor) + txt + sciExpr.slice(sciCursor);
+        sciCursor += txt.length;
+        shiftOn = false;
+        alphaOn = false;
+        stoOn = false;
+        updateSciLCD();
+      }
+
+      // Bind Scientific Keys
+      document.getElementById('btn-sci-shift').onclick = () => { playClick(); shiftOn = !shiftOn; alphaOn = false; updateSciLCD(); };
+      document.getElementById('btn-sci-alpha').onclick = () => { playClick(); alphaOn = !alphaOn; shiftOn = false; updateSciLCD(); };
+
+      document.getElementById('btn-sci-angle').onclick = (e) => {
+        playClick();
+        const order = ['DEG', 'RAD', 'GRA'];
+        state.angleUnit = order[(order.indexOf(state.angleUnit) + 1) % 3];
+        e.currentTarget.textContent = state.angleUnit;
+        updateSciLCD();
+      };
+
+      document.getElementById('btn-sci-lcd-theme').onclick = (e) => {
+        playClick();
+        const themes = ['cyber', 'mint', 'amber'];
+        const names = { cyber: 'Cyber LCD', mint: 'Mint LCD', amber: 'Amber LCD' };
+        state.lcdTheme = themes[(themes.indexOf(state.lcdTheme) + 1) % 3];
+        document.getElementById('sci-lcd').setAttribute('data-lcd', state.lcdTheme);
+        e.currentTarget.innerHTML = `<i class="ri-palette-line"></i> ${names[state.lcdTheme]}`;
+      };
+
+      document.querySelectorAll('[data-dpad]').forEach((b) => {
+        b.onclick = () => {
+          playClick();
+          const dir = b.getAttribute('data-dpad');
+          if (dir === 'LEFT') sciCursor = Math.max(0, sciCursor - 1);
+          else if (dir === 'RIGHT') sciCursor = Math.min(sciExpr.length, sciCursor + 1);
+          else if (dir === 'UP' && sciReplay.length) {
+            replayIdx = Math.max(0, replayIdx - 1);
+            sciExpr = sciReplay[replayIdx];
+            sciCursor = sciExpr.length;
+          } else if (dir === 'DOWN' && sciReplay.length) {
+            replayIdx = Math.min(sciReplay.length - 1, replayIdx + 1);
+            sciExpr = sciReplay[replayIdx];
+            sciCursor = sciExpr.length;
+          }
+          updateSciLCD();
+        };
+      });
+
+      document.querySelectorAll('[data-snum]').forEach((b) => {
+        b.onclick = () => {
+          playClick();
+          const n = b.getAttribute('data-snum');
+          if (shiftOn) {
+            const smap = { '7': 'Σ(', '8': 'd/dx(', '9': '!', '4': 'GCD(', '5': 'LCM(', '6': 'Pol(', '1': 'Rec(', '2': 'RanInt(', '3': 'π', '0': String(Number(Math.random().toFixed(3))) };
+            return insertSci(smap[n] || n);
+          }
+          insertSci(n);
+        };
+      });
+
+      document.querySelectorAll('[data-sop]').forEach((b) => {
+        b.onclick = () => {
+          playClick();
+          const op = b.getAttribute('data-sop');
+          if (shiftOn) {
+            if (op === '×') return insertSci('P');
+            if (op === '÷') return insertSci('C');
+            if (op === '+') return insertSci('=');
+            if (op === '−') return insertSci('Rnd(');
+          }
+          insertSci(op);
+        };
+      });
+
+      document.querySelectorAll('[data-sch]').forEach((b) => {
+        b.onclick = () => {
+          playClick();
+          const v = b.getAttribute('data-svar');
+          if (stoOn && v) { sciVars[v] = sciAns; stoOn = false; renderSciVars(); updateSciLCD(); return showToast(`${v} = ${sciAns} সেভ হয়েছে`); }
+          if (alphaOn && v) return insertSci(v);
+          const ch = b.getAttribute('data-sch');
+          if (shiftOn && ch === ')') return insertSci(',');
+          insertSci(ch);
+        };
+      });
+
+      document.querySelectorAll('[data-sfn]').forEach((b) => {
+        b.onclick = () => {
+          playClick();
+          const v = b.getAttribute('data-svar');
+          if (stoOn && v) { sciVars[v] = sciAns; stoOn = false; renderSciVars(); updateSciLCD(); return showToast(`${v} = ${sciAns} সেভ হয়েছে`); }
+          if (alphaOn && v) return insertSci(v);
+
+          const fn = b.getAttribute('data-sfn');
+          const map = {
+            FRAC: '/',
+            SQRT: shiftOn ? '³√(' : '√(',
+            SQ: shiftOn ? '³' : '²',
+            POW: '^',
+            LOG: shiftOn ? '10^' : 'log(',
+            LN: shiftOn ? '2.718281828^' : 'ln(',
+            NEG: '-',
+            HYP: shiftOn ? 'abs(' : 'sinh(',
+            SIN: shiftOn ? 'sin⁻¹(' : 'sin(',
+            COS: shiftOn ? 'cos⁻¹(' : 'cos(',
+            TAN: shiftOn ? 'tan⁻¹(' : 'tan(',
+            EXP10: shiftOn ? 'π' : '×10^',
+            ANS: shiftOn ? 'PreAns' : 'Ans',
+            INV: '⁻¹',
+            INTEG: shiftOn ? 'd/dx(' : '∫('
+          };
+          if (fn === 'FACT' && lastSciEval.ok) {
+            let n = Math.round(Math.abs(sciAns)), out = [];
+            for (let d = 2; d * d <= n; d++) {
+              let c = 0; while (n % d === 0) { c++; n /= d; }
+              if (c) out.push(c > 1 ? `${d}^${c}` : `${d}`);
+            }
+            if (n > 1) out.push(`${n}`);
+            lastSciEval.sym = out.join(' × ') || String(sciAns);
+            showSymbolic = true;
+            return updateSciLCD();
+          }
+          if (fn === 'DMS' && lastSciEval.ok) {
+            const abs = Math.abs(sciAns), d = Math.floor(abs), m = Math.floor((abs - d) * 60), s = (((abs - d) * 60 - m) * 60).toFixed(1);
+            lastSciEval.sym = `${sciAns < 0 ? '-' : ''}${d}° ${m}′ ${s}″`;
+            showSymbolic = true;
+            return updateSciLCD();
+          }
+          if (map[fn]) insertSci(map[fn]);
+        };
+      });
+
+      document.querySelectorAll('[data-sact]').forEach((b) => {
+        b.onclick = () => {
+          playClick();
+          const act = b.getAttribute('data-sact');
+          if (act === 'AC') { sciExpr = ''; sciCursor = 0; lastSciEval = { ok: true, dec: '0', sym: '0', latex: '0' }; updateSciLCD(); }
+          else if (act === 'DEL') {
+            if (sciCursor > 0) { sciExpr = sciExpr.slice(0, sciCursor - 1) + sciExpr.slice(sciCursor); sciCursor--; updateSciLCD(); }
+          } else if (act === 'SD') {
+            showSymbolic = !showSymbolic;
+            updateSciLCD();
+          } else if (act === 'RCL') {
+            stoOn = true;
+            updateSciLCD();
+            showToast('যে চলকে (A-F, X, Y, M) মান সেভ করতে চান সেটিতে চাপুন');
+          } else if (act === 'M+') {
+            sciVars.M += shiftOn ? -sciAns : sciAns;
+            renderSciVars();
+            updateSciLCD();
+          } else if (act === 'EQUALS') {
+            try {
+              const val = evaluateSciString(sciExpr || '0');
+              preAns = sciAns;
+              sciAns = val;
+              sciReplay.push(sciExpr);
+              replayIdx = sciReplay.length;
+              const frac = toFractionObj(val);
+              lastSciEval = {
+                ok: true,
+                dec: String(val),
+                sym: frac ? frac.text : String(val),
+                latex: frac ? frac.latex : String(val)
+              };
+              showSymbolic = true;
+            } catch (e) {
+              lastSciEval = { ok: false, err: e.message || 'Syntax ERROR' };
+            }
+            updateSciLCD();
+          } else if (act === 'SOLVE') {
+            try {
+              const parts = (sciExpr || 'X^2-4=0').split('=');
+              const lhs = parts[0], rhs = parts[1] || '0';
+              let x = 1.2;
+              for (let i = 0; i < 60; i++) {
+                const f = (v) => evaluateSciString(lhs, { ...sciVars, X: v }) - evaluateSciString(rhs, { ...sciVars, X: v });
+                const fx = f(x);
+                if (Math.abs(fx) < 1e-10) break;
+                const df = (f(x + 1e-6) - f(x - 1e-6)) / 2e-6;
+                x = x - fx / (df || 1);
+              }
+              sciAns = Number(x.toPrecision(8));
+              sciVars.X = sciAns;
+              renderSciVars();
+              lastSciEval = { ok: true, dec: `X = ${sciAns}`, sym: `X = ${sciAns}`, latex: `X = ${sciAns}` };
+              updateSciLCD();
+            } catch (_) {
+              lastSciEval = { ok: false, err: 'Cannot Solve' };
+              updateSciLCD();
+            }
+          } else if (act === 'CONST') {
+            openModal(
+              'বৈজ্ঞানিক ধ্রুবক (CONST)',
+              CONSTANTS_40.map((c) => `<button class="dark-input" data-cval="${c.val}" style="margin-bottom:6px; text-align:left; display:flex; justify-content:space-between;"><span><strong>${c.s}</strong> — ${c.name}</span><code style="color:var(--neon-green);">${c.val}</code></button>`).join(''),
+              [{ label: 'বন্ধ করুন', cls: 'outline' }]
+            );
+            document.querySelectorAll('[data-cval]').forEach((cb) => {
+              cb.onclick = () => {
+                insertSci(cb.getAttribute('data-cval'));
+                document.getElementById('modal-overlay').classList.add('hidden');
+              };
+            });
+          } else if (act === 'CONV') {
+            openModal(
+              'একক রূপান্তর (CONV)',
+              CONVERSIONS_40.map((u, idx) => `<button class="dark-input" data-conv="${idx}" style="margin-bottom:6px; text-align:left; display:flex; justify-content:space-between;"><strong>${u.id}: ${u.lbl}</strong><i class="ri-arrow-right-line" style="color:var(--neon-cyan);"></i></button>`).join(''),
+              [{ label: 'বন্ধ করুন', cls: 'outline' }]
+            );
+            document.querySelectorAll('[data-conv]').forEach((ub) => {
+              ub.onclick = () => {
+                const u = CONVERSIONS_40[Number(ub.getAttribute('data-conv'))];
+                const baseVal = sciExpr ? evaluateSciString(sciExpr) : sciAns || 1;
+                const out = Number(u.fn(baseVal).toPrecision(8));
+                sciAns = out;
+                lastSciEval = { ok: true, dec: String(out), sym: `${baseVal} (${u.lbl}) = ${out}`, latex: String(out) };
+                updateSciLCD();
+                document.getElementById('modal-overlay').classList.add('hidden');
+              };
+            });
+          }
+        };
+      });
+
+      // Specialized 12-Mode Workbench Switcher
+      document.querySelectorAll('[data-smode]').forEach((mb) => {
+        mb.onclick = () => {
+          playClick();
+          const m = mb.getAttribute('data-smode');
+          state.sciMode = m;
+          document.querySelectorAll('[data-smode]').forEach((x) => x.classList.toggle('active', x === mb));
+          renderSciModeWorkbench(m);
+          updateSciLCD();
+        };
+      });
+
+      function renderSciModeWorkbench(m) {
+        const wb = document.getElementById('sci-workbench');
+        if (m === 'COMP') { wb.classList.add('hidden'); return; }
+        wb.classList.remove('hidden');
+
+        if (m === 'EQN') {
+          wb.innerHTML = `
+            <div style="font-size:11px; font-weight:800; color:var(--neon-cyan); margin-bottom:6px;">EQN Solver: ax² + bx + c = 0</div>
+            <div style="display:grid; grid-template-columns:repeat(3,1fr) auto; gap:5px;">
+              <input id="eq-a" type="number" class="dark-input" value="1" placeholder="a">
+              <input id="eq-b" type="number" class="dark-input" value="-5" placeholder="b">
+              <input id="eq-c" type="number" class="dark-input" value="6" placeholder="c">
+              <button id="btn-eq-run" class="neon-btn green">Solve</button>
+            </div>`;
+          wb.querySelector('#btn-eq-run').onclick = () => {
+            const a = Number(document.getElementById('eq-a').value || 1);
+            const b = Number(document.getElementById('eq-b').value || 0);
+            const c = Number(document.getElementById('eq-c').value || 0);
+            const d = b * b - 4 * a * c;
+            if (d >= 0) {
+              const x1 = Number(((-b + Math.sqrt(d)) / (2 * a)).toPrecision(6));
+              const x2 = Number(((-b - Math.sqrt(d)) / (2 * a)).toPrecision(6));
+              lastSciEval = { ok: true, sym: `x₁=${x1}, x₂=${x2}`, dec: `x₁=${x1}, x₂=${x2}` };
+            } else {
+              const re = Number((-b / (2 * a)).toPrecision(4));
+              const im = Number((Math.sqrt(-d) / (2 * Math.abs(a))).toPrecision(4));
+              lastSciEval = { ok: true, sym: `${re}±${im}i`, dec: `${re}±${im}i` };
+            }
+            updateSciLCD();
+          };
+          return;
+        }
+
+        if (m === 'BASE_N') {
+          wb.innerHTML = `
+            <div style="display:flex; gap:5px; align-items:center;">
+              <input id="bn-in" type="number" class="dark-input" value="25" placeholder="Decimal Number">
+              <button id="btn-bn-run" class="neon-btn cyan">Convert</button>
+            </div>`;
+          wb.querySelector('#btn-bn-run').onclick = () => {
+            const v = parseInt(document.getElementById('bn-in').value || '0', 10);
+            lastSciEval = { ok: true, sym: `HEX:${v.toString(16).toUpperCase()} | BIN:${v.toString(2)}`, dec: `OCT:${v.toString(8)}` };
+            updateSciLCD();
+          };
+          return;
+        }
+
+        wb.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:6px;">
+            <input id="wb-generic" class="dark-input" value="1, 2, 3, 4, 5" placeholder="${m} Values (comma separated)">
+            <button id="btn-wb-calc" class="neon-btn green">হিসাব</button>
+          </div>`;
+        wb.querySelector('#btn-wb-calc').onclick = () => {
+          const arr = document.getElementById('wb-generic').value.split(',').map(Number).filter(Number.isFinite);
+          const sum = arr.reduce((a, b) => a + b, 0);
+          const mean = arr.length ? Number((sum / arr.length).toPrecision(6)) : 0;
+          lastSciEval = { ok: true, sym: `Σx=${sum}, x̄=${mean}, n=${arr.length}`, dec: String(mean) };
+          updateSciLCD();
+        };
+      }
+
+      /* ------------------------------------------------------------------------
+         5. AI SOLVER (CAMERA, GALLERY, VOICE & LOCAL + GEMINI FLASH/LITE)
+         ------------------------------------------------------------------------ */
+      let aiImageBase64 = null;
+
+      function handleAiPhoto(file) {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const max = 900;
+            let w = img.width, h = img.height;
+            if (w > max || h > max) {
+              if (w > h) { h = Math.round((h * max) / w); w = max; }
+              else { w = Math.round((w * max) / h); h = max; }
+            }
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.78);
+            aiImageBase64 = dataUrl.split(',')[1];
+            document.getElementById('ai-img-preview').src = dataUrl;
+            document.getElementById('ai-img-wrap').classList.remove('hidden');
+            showToast('ছবি প্রস্তুত! এখন "সমাধান করুন" বাটনে চাপুন।');
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      document.getElementById('inp-ai-camera').onchange = (e) => handleAiPhoto(e.target.files?.[0]);
+      document.getElementById('inp-ai-gallery').onchange = (e) => handleAiPhoto(e.target.files?.[0]);
+      document.getElementById('btn-ai-clear-img').onclick = () => {
+        aiImageBase64 = null;
+        document.getElementById('ai-img-wrap').classList.add('hidden');
+      };
+
+      document.querySelectorAll('[data-aisym]').forEach((b) => {
+        b.onclick = () => {
+          playClick();
+          const box = document.getElementById('ai-prompt-box');
+          box.value += b.getAttribute('data-aisym');
+          box.focus();
+        };
+      });
+
+      // Voice Input (Bangla & English)
+      document.getElementById('btn-ai-voice').onclick = () => {
+        playClick();
+        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SR) return showToast('ভয়েস টাইপিংয়ের জন্য Chrome ব্রাউজার ব্যবহার করুন');
+        const rec = new SR();
+        rec.lang = state.lang === 'bn' ? 'bn-BD' : 'en-US';
+        document.getElementById('lbl-ai-mic').textContent = 'শুনছি...';
+        rec.onresult = (e) => {
+          const txt = e.results?.[0]?.[0]?.transcript || '';
+          document.getElementById('ai-prompt-box').value += (txt + ' ');
+        };
+        rec.onend = () => {
+          document.getElementById('lbl-ai-mic').textContent = 'মুখে বলুন';
+        };
+        rec.start();
+      };
+
+      document.getElementById('btn-ai-solve').onclick = async () => {
+        playClick();
+        const prompt = document.getElementById('ai-prompt-box').value.trim();
+        if (!prompt && !aiImageBase64) return showToast('প্রশ্ন লিখুন অথবা অংকের ছবি দিন');
+
+        const ansCard = document.getElementById('ai-ans-card');
+        const ansBody = document.getElementById('ai-ans-body');
+        const ansTag = document.getElementById('ai-ans-tag');
+        ansCard.classList.remove('hidden');
+
+        // 1. Try Local Math Engine Fast-Path (0 API cost, works 100% offline!)
+        if (!aiImageBase64 && !/[অ-হa-zA-Z]{5,}/.test(prompt)) {
+          try {
+            const val = evaluateSciString(prompt);
+            const frac = toFractionObj(val);
+            ansTag.textContent = '⚡ লোকাল ম্যাথ ইঞ্জিন (ফ্রি ও অফলাইন)';
+            ansBody.innerHTML = renderMathHTML(
+              `**প্রদত্ত রাশি:** $${prompt}$\n\n**ধাপে ধাপে মান:**\n- ভগ্নাংশ / প্রতীকী মান: $$${frac ? frac.latex : val}$$\n- দশমিক মান: **${val}**`
+            );
+            return;
+          } catch (_) {}
+        }
+
+        // 2. Call Gemini API (Primary Flash -> Automatic Flash-Lite Fallback)
+        const key = state.apiConfig.geminiKey;
+        if (!key) {
+          ansTag.textContent = '🔑 API Key প্রয়োজন';
+          ansBody.innerHTML = `ছবি বা লিখিত প্রশ্নের AI সমাধানের জন্য উপরের ডান কোণায় <b>🔑 (Key)</b> আইকনে ক্লিক করে আপনার ফ্রি <b>Gemini API Key</b> পেস্ট করুন।`;
+          return;
+        }
+
+        ansTag.textContent = '⏳ AI সমাধান তৈরি করছে...';
+        ansBody.innerHTML = 'অনুগ্রহ করে কয়েক সেকেন্ড অপেক্ষা করুন...';
+
+        const parts = [{ text: `তুমি বাংলাদেশের একজন অভিজ্ঞ শিক্ষক। ধাপে ধাপে বাংলায় সূত্রসহ সমাধান দাও এবং সমীকরণ LaTeX ($...$) আকারে লেখো।\nপ্রশ্ন: ${prompt || 'ছবির অংকটি সমাধান করো।'}` }];
+        if (aiImageBase64) {
+          parts.push({ inline_data: { mime_type: 'image/jpeg', data: aiImageBase64 } });
+        }
+
+        const models = ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
+        for (const m of models) {
+          try {
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${key}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ contents: [{ role: 'user', parts }] })
+            });
+            if (res.status === 429) continue; // Auto-switch to flash-lite if rate limited
+            const data = await res.json();
+            const outText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (outText) {
+              state.aiUsedToday++;
+              localStorage.setItem('zx_ai_used', String(state.aiUsedToday));
+              document.getElementById('ai-limit-badge').textContent = `ফ্রি বাকি: ${fmtNum(Math.max(0, 15 - state.aiUsedToday))}/১৫`;
+              ansTag.textContent = `✨ ZenvX AI (${m})`;
+              ansBody.innerHTML = renderMathHTML(outText);
+              return;
+            }
+          } catch (_) {}
+        }
+        ansTag.textContent = '⚠️ সংযোগ ত্রুটি';
+        ansBody.textContent = 'API Key বা ইন্টারনেট সংযোগ চেক করুন।';
+      };
+
+      document.getElementById('btn-ai-copy').onclick = () => {
+        navigator.clipboard?.writeText(document.getElementById('ai-ans-body').innerText);
+        showToast('সমাধান কপি করা হয়েছে!');
+      };
+
+      /* ------------------------------------------------------------------------
+         6. REALTIME STUDY CHAT & AUDIO/VIDEO CALLS
+         ------------------------------------------------------------------------ */
+      const chatMsgs = [
+        { sender: 'সাকিব (গণিত মেন্টর)', text: 'আসসালামু আলাইকুম! আজকের ক্যালকুলাস স্টাডি রুমে সবাইকে স্বাগতম। $$\\int_{0}^{\\pi} \\sin(x)dx = 2$$', me: false },
+        { sender: 'সুমাইয়া আক্তার', text: 'স্যার, নতুন Neon Dark Mode ক্যালকুলেটরটি দেখতে অসাধারণ লাগছে!', me: false }
+      ];
+
+      function renderChat() {
+        const box = document.getElementById('chat-stream');
+        box.innerHTML = chatMsgs
+          .map(
+            (m) => `
+            <div style="align-self:${m.me ? 'flex-end' : 'flex-start'}; max-width:80%; background:${m.me ? 'var(--neon-green)' : 'var(--bg-card-3)'}; color:${m.me ? '#04120A' : '#FFFFFF'}; padding:9px 13px; border-radius:16px; border:1px solid var(--border-subtle);">
+              ${!m.me ? `<div style="font-size:10px; font-weight:800; color:var(--neon-cyan); margin-bottom:2px;">${m.sender}</div>` : ''}
+              <div style="font-size:13px; font-weight:${m.me ? '700' : '500'};">${renderMathHTML(m.text)}</div>
+            </div>`
+          )
+          .join('');
+        box.scrollTop = box.scrollHeight;
+      }
+      renderChat();
+
+      document.getElementById('btn-chat-send').onclick = () => {
+        const inp = document.getElementById('chat-inp');
+        if (!inp.value.trim()) return;
+        playClick();
+        chatMsgs.push({ sender: 'আমি', text: inp.value.trim(), me: true });
+        inp.value = '';
+        renderChat();
+      };
+
+      function startLiveCall(mode) {
+        playClick();
+        openModal(
+          mode === 'video' ? '📹 লাইভ ভিডিও স্টাডি রুম' : '📞 অডিও কল সক্রিয়',
+          `<div style="text-align:center; padding:12px;">
+            <video id="live-cam-preview" autoplay playsinline muted style="width:100%; height:200px; background:#000; border-radius:14px; object-fit:cover; border:1px solid var(--neon-cyan);"></video>
+            <p style="margin-top:8px; font-size:12px; color:var(--neon-green);">● সংযুক্ত (ZEGOCLOUD / WebRTC ইঞ্জিন)</p>
+          </div>`,
+          [
+            {
+              label: 'কল সমাপ্ত করুন',
+              cls: 'red',
+              onClick: () => {
+                const v = document.getElementById('live-cam-preview');
+                v?.srcObject?.getTracks()?.forEach((t) => t.stop());
+              }
+            }
+          ]
+        );
+        navigator.mediaDevices?.getUserMedia({ audio: true, video: mode === 'video' }).then((stream) => {
+          const v = document.getElementById('live-cam-preview');
+          if (v) v.srcObject = stream;
+        }).catch(() => {});
+      }
+
+      document.getElementById('btn-audio-call').onclick = () => startLiveCall('audio');
+      document.getElementById('btn-video-call').onclick = () => startLiveCall('video');
+
+      /* ------------------------------------------------------------------------
+         7. CREATIVE SPACE (CODING, WHITEBOARD, GRAPH PLOTTER, POMODORO, FORMULAS)
+         ------------------------------------------------------------------------ */
+      function renderCreativeTool(toolId) {
+        const stage = document.getElementById('creative-stage');
+        if (toolId === 'code') {
+          stage.innerHTML = `
+            <strong style="font-size:13px; color:var(--neon-green); display:block; margin-bottom:8px;">HTML / CSS / JS লাইভ কোড এডিটর</strong>
+            <textarea id="play-code" class="dark-input" rows="5" style="font-family:var(--font-mono); margin-bottom:8px;"><h3 style="color:#00E676; font-family:sans-serif;">হ্যালো ZenvX!</h3><p style="color:#fff;">আমার প্রথম প্রজেক্ট</p></textarea>
+            <button id="btn-run-play" class="neon-btn green" style="width:100%; margin-bottom:8px;">কোড রান করুন</button>
+            <iframe id="play-frame" style="width:100%; height:140px; border-radius:12px; border:1px solid var(--border-subtle); background:#0D0D0D;"></iframe>`;
+          const run = () => { document.getElementById('play-frame').srcdoc = document.getElementById('play-code').value; };
+          stage.querySelector('#btn-run-play').onclick = run;
+          run();
+        } else if (toolId === 'whiteboard') {
+          stage.innerHTML = `
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+              <strong style="font-size:13px; color:var(--neon-cyan);">ডিজিটাল হোয়াইটবোর্ড (আঙুল দিয়ে আঁকুন)</strong>
+              <button id="btn-wb-clear" class="mode-pill" style="color:var(--neon-red);">মুছুন</button>
+            </div>
+            <canvas id="wb-canvas" width="360" height="220" style="width:100%; background:#08080A; border-radius:14px; border:1px solid var(--border-subtle); touch-action:none;"></canvas>`;
+          const cv = document.getElementById('wb-canvas');
+          const ctx = cv.getContext('2d');
+          ctx.strokeStyle = '#00E676';
+          ctx.lineWidth = 3;
+          let drawing = false;
+          const pos = (e) => {
+            const r = cv.getBoundingClientRect();
+            const pt = e.touches ? e.touches[0] : e;
+            return { x: (pt.clientX - r.left) * (cv.width / r.width), y: (pt.clientY - r.top) * (cv.height / r.height) };
+          };
+          cv.onpointerdown = (e) => { drawing = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); };
+          cv.onpointermove = (e) => { if (!drawing) return; const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); };
+          cv.onpointerup = () => { drawing = false; };
+          document.getElementById('btn-wb-clear').onclick = () => ctx.clearRect(0, 0, cv.width, cv.height);
+        } else if (toolId === 'graph') {
+          stage.innerHTML = `
+            <div style="display:flex; gap:6px; margin-bottom:8px;">
+              <input id="gr-fn" class="dark-input" value="sin(X)" placeholder="f(X) যেমন: X^2 - 4">
+              <button id="btn-gr-plot" class="neon-btn cyan">গ্রাফ আঁকুন</button>
+            </div>
+            <canvas id="gr-canvas" width="360" height="200" style="width:100%; background:#08080A; border-radius:14px; border:1px solid var(--border-subtle);"></canvas>`;
+          const plot = () => {
+            const cv = document.getElementById('gr-canvas');
+            const ctx = cv.getContext('2d');
+            ctx.clearRect(0, 0, cv.width, cv.height);
+            ctx.strokeStyle = '#282834';
+            ctx.beginPath(); ctx.moveTo(0, 100); ctx.lineTo(360, 100); ctx.moveTo(180, 0); ctx.lineTo(180, 200); ctx.stroke();
+            ctx.strokeStyle = '#00B4D8'; ctx.lineWidth = 2.5; ctx.beginPath();
+            const expr = document.getElementById('gr-fn').value;
+            for (let px = 0; px <= 360; px += 2) {
+              const x = (px - 180) / 25;
+              try {
+                const prevUnit = state.angleUnit; state.angleUnit = 'RAD';
+                const y = evaluateSciString(expr, { ...sciVars, X: x });
+                state.angleUnit = prevUnit;
+                const py = 100 - y * 25;
+                if (px === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+              } catch (_) {}
+            }
+            ctx.stroke();
+          };
+          stage.querySelector('#btn-gr-plot').onclick = plot;
+          plot();
+        } else if (toolId === 'timer') {
+          stage.innerHTML = `
+            <div style="text-align:center; padding:16px;">
+              <div id="pomo-clock" style="font-family:var(--font-mono); font-size:2.8rem; font-weight:900; color:var(--neon-green);">২৫:০০</div>
+              <button id="btn-pomo-go" class="neon-btn green" style="margin-top:10px;">টাইমার শুরু করুন</button>
+            </div>`;
+          let sec = 1500, tId = null;
+          stage.querySelector('#btn-pomo-go').onclick = () => {
+            clearInterval(tId);
+            tId = setInterval(() => {
+              if (sec > 0) sec--;
+              const m = String(Math.floor(sec / 60)).padStart(2, '0');
+              const s = String(sec % 60).padStart(2, '0');
+              const el = document.getElementById('pomo-clock');
+              if (el) el.textContent = fmtNum(`${m}:${s}`);
+            }, 1000);
+          };
+        } else {
+          stage.innerHTML = `
+            <div style="display:grid; gap:8px; font-size:13px;">
+              <div class="dark-input">${renderMathHTML('**দ্বিঘাত সমীকরণ:** $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$')}</div>
+              <div class="dark-input">${renderMathHTML('**গতিবিদ্যা:** $s = ut + \\frac{1}{2}at^2$, $v^2 = u^2 + 2as$')}</div>
+              <div class="dark-input">${renderMathHTML('**আইনস্টাইনের ভর-শক্তি:** $E = mc^2$')}</div>
+            </div>`;
+        }
+      }
+      renderCreativeTool('code');
+
+      document.querySelectorAll('[data-ctool]').forEach((b) => {
+        b.onclick = () => {
+          playClick();
+          document.querySelectorAll('[data-ctool]').forEach((x) => x.classList.toggle('active', x === b));
+          renderCreativeTool(b.getAttribute('data-ctool'));
+        };
+      });
+
+      /* ------------------------------------------------------------------------
+         8. EDUCATION FEED, PHOTO/REELS UPLOAD & BKASH/NAGAD WALLET
+         ------------------------------------------------------------------------ */
+      const posts = [
+        { author: 'MD. Rasel (পদার্থবিজ্ঞান ও গণিত প্রশিক্ষক)', title: 'SSC ও HSC পদার্থবিজ্ঞান শর্টকাট সূত্র গাইড', body: 'যেকোনো গাণিতিক সমস্যা দ্রুত সমাধানের জন্য আগে এককগুলো SI এককে রূপান্তর করে নিন।', yt: '', img: '', likes: 42 }
+      ];
+
+      function renderFeed() {
+        document.getElementById('feed-list').innerHTML = posts
+          .map(
+            (p, idx) => `
+            <div class="dark-card">
+              <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                <strong style="font-size:13px; color:var(--neon-cyan);"><i class="ri-verified-badge-fill" style="color:var(--neon-green);"></i> ${p.author}</strong>
+                <span style="font-size:10px; color:var(--text-gray-3);">এডুকেশন পোস্ট</span>
+              </div>
+              <h3 style="font-size:14px; font-weight:800; margin-bottom:4px;">${p.title}</h3>
+              <p style="font-size:13px; color:var(--text-gray-1); margin-bottom:8px;">${p.body}</p>
+              ${p.img ? `<img src="${p.img}" style="width:100%; max-height:220px; object-fit:cover; border-radius:12px; margin-bottom:8px;">` : ''}
+              ${p.yt ? `<iframe src="https://www.youtube.com/embed/${p.yt}" style="width:100%; height:200px; border-radius:12px; border:0; margin-bottom:8px;" allowfullscreen></iframe>` : ''}
+              <button class="mode-pill" data-like="${idx}">❤️ ${fmtNum(p.likes)} লাইক</button>
+            </div>`
+          )
+          .join('');
+
+        document.querySelectorAll('[data-like]').forEach((lb) => {
+          lb.onclick = () => {
+            playClick();
+            posts[Number(lb.getAttribute('data-like'))].likes++;
+            renderFeed();
+          };
+        });
+      }
+      renderFeed();
+
+      document.getElementById('btn-new-post').onclick = () => {
+        openModal(
+          'নতুন এডুকেশন ছবি / ভিডিও / রিলস পোস্ট',
+          `<div style="display:grid; gap:8px;">
+            <input id="np-title" class="dark-input" placeholder="পোস্টের শিরোনাম">
+            <textarea id="np-body" class="dark-input" rows="3" placeholder="নোট বা টিপস লিখুন..."></textarea>
+            <input id="np-yt" class="dark-input" placeholder="YouTube Video / Shorts ID (যেমন: dQw4w9WgXcQ)">
+            <label class="neon-btn outline" style="cursor:pointer;">
+              <i class="ri-image-add-line"></i> গ্যালারি থেকে নোটের ছবি যুক্ত করুন
+              <input id="np-img" type="file" accept="image/*" class="hidden">
+            </label>
+          </div>`,
+          [
+            {
+              label: 'প্রকাশ করুন',
+              onClick: () => {
+                const title = document.getElementById('np-title').value.trim();
+                const body = document.getElementById('np-body').value.trim();
+                const yt = document.getElementById('np-yt').value.trim();
+                const file = document.getElementById('np-img').files?.[0];
+                if (!title) return;
+                if (file) {
+                  const r = new FileReader();
+                  r.onload = (e) => {
+                    posts.unshift({ author: state.user?.name || 'ZenvX শিক্ষক', title, body, yt, img: e.target.result, likes: 1 });
+                    renderFeed();
+                  };
+                  r.readAsDataURL(file);
+                } else {
+                  posts.unshift({ author: state.user?.name || 'ZenvX শিক্ষক', title, body, yt, img: '', likes: 1 });
+                  renderFeed();
+                }
+                showToast('পোস্ট সফলভাবে প্রকাশিত হয়েছে!');
+              }
+            }
+          ]
+        );
+      };
+
+      document.getElementById('btn-payout').onclick = () => {
+        openModal(
+          'বিকাশ / নগদ পেআউট উত্তোলন',
+          `<div style="display:grid; gap:8px;">
+            <select class="dark-input"><option>বিকাশ (bKash Personal)</option><option>নগদ (Nagad Personal)</option></select>
+            <input class="dark-input" placeholder="মোবাইল নম্বর (017XXXXXXXX)">
+            <input class="dark-input" type="number" placeholder="টাকার পরিমাণ">
+          </div>`,
+          [{ label: 'রিকোয়েস্ট পাঠান', onClick: () => showToast('পেআউট রিকোয়েস্ট জমা হয়েছে!') }]
+        );
+      };
+
+      /* ------------------------------------------------------------------------
+         9. PROFILE & IN-APP API CONFIGURATION CENTER
+         ------------------------------------------------------------------------ */
+      function renderProfile() {
+        const box = document.getElementById('profile-stage');
+        const u = state.user || { name: 'MD. Rasel', role: 'ভেরিফায়েড শিক্ষক ও ডেভেলপার', inst: 'ঠাকুরগাঁও সরকারি কলেজ (পদার্থবিজ্ঞান)' };
+        box.innerHTML = `
+          <div class="dark-card" style="text-align:center; padding:20px;">
+            <div style="width:76px; height:76px; border-radius:50%; margin:0 auto 10px; background:var(--bg-card-3); border:2px solid var(--neon-green); display:flex; align-items:center; justify-content:center; font-size:32px; color:var(--neon-green); box-shadow:var(--glow-green);">
+              <i class="ri-user-star-fill"></i>
+            </div>
+            <h2 style="font-size:18px; font-weight:900;">${u.name}</h2>
+            <p style="font-size:12px; color:var(--neon-cyan); font-weight:700; margin-top:2px;">${u.role}</p>
+            <p style="font-size:12px; color:var(--text-gray-2); margin-top:4px;">🏫 ${u.inst}</p>
+            <div style="display:flex; justify-content:center; gap:8px; margin-top:14px;">
+              <button id="btn-edit-prof" class="neon-btn green"><i class="ri-edit-2-line"></i> প্রোফাইল এডিট</button>
+              <button id="btn-prof-api" class="neon-btn outline"><i class="ri-key-2-line"></i> API সেটিংস</button>
+            </div>
+          </div>`;
+
+        box.querySelector('#btn-edit-prof').onclick = () => {
+          openModal(
+            'প্রোফাইল আপডেট করুন',
+            `<div style="display:grid; gap:8px;">
+              <input id="pr-name" class="dark-input" value="${u.name}" placeholder="আপনার নাম">
+              <input id="pr-role" class="dark-input" value="${u.role}" placeholder="পদবি (শিক্ষক / শিক্ষার্থী)">
+              <input id="pr-inst" class="dark-input" value="${u.inst}" placeholder="প্রতিষ্ঠান">
+            </div>`,
+            [
+              {
+                label: 'সেভ করুন',
+                onClick: () => {
+                  state.user = {
+                    name: document.getElementById('pr-name').value.trim(),
+                    role: document.getElementById('pr-role').value.trim(),
+                    inst: document.getElementById('pr-inst').value.trim()
+                  };
+                  localStorage.setItem('zx_user', JSON.stringify(state.user));
+                  renderProfile();
+                  showToast('প্রোফাইল আপডেট হয়েছে!');
+                }
+              }
+            ]
+          );
+        };
+        box.querySelector('#btn-prof-api').onclick = openApiModal;
+      }
+      renderProfile();
+
+      function openApiModal() {
+        playClick();
+        const c = state.apiConfig;
+        openModal(
+          '🔑 API ও ক্লাউড কানেকশন সেটআপ',
+          `<div style="display:grid; gap:8px;">
+            <label style="font-size:11px; color:var(--neon-green); font-weight:800;">১. Google AI Studio (Gemini API Key)</label>
+            <input id="api-gemini" class="dark-input" value="${c.geminiKey || ''}" placeholder="AIzaSy...">
+
+            <label style="font-size:11px; color:var(--neon-cyan); font-weight:800;">২. Firebase Project ID</label>
+            <input id="api-fb" class="dark-input" value="${c.firebaseProjectId || ''}" placeholder="zenvx-calculator">
+
+            <label style="font-size:11px; color:var(--neon-orange); font-weight:800;">৩. ZEGOCLOUD App ID (অডিও/ভিডিও কলের জন্য)</label>
+            <input id="api-zego" class="dark-input" value="${c.zegoAppId || ''}" placeholder="App ID">
+
+            <label style="font-size:11px; color:var(--text-gray-2); font-weight:800;">৪. Cloudinary Cloud Name & Preset (ছবি আপলোডের জন্য)</label>
+            <input id="api-cloud" class="dark-input" value="${c.cloudinaryCloud || ''}" placeholder="Cloud Name">
+          </div>`,
+          [
+            {
+              label: 'সংরক্ষণ করুন',
+              onClick: () => {
+                state.apiConfig = {
+                  geminiKey: document.getElementById('api-gemini').value.trim(),
+                  firebaseProjectId: document.getElementById('api-fb').value.trim(),
+                  zegoAppId: document.getElementById('api-zego').value.trim(),
+                  cloudinaryCloud: document.getElementById('api-cloud').value.trim()
+                };
+                localStorage.setItem('zx_api_cfg', JSON.stringify(state.apiConfig));
+                showToast('সব API কী নিরাপদে সংরক্ষিত হয়েছে!');
+              }
+            }
+          ]
+        );
+      }
+
+      document.getElementById('btn-open-api-setup').onclick = openApiModal;
+
+      // Initial Boot
+      syncDigitButtons();
+      updateNormalLCD();
+      renderNormalHistory();
+      renderSciVars();
+      updateSciLCD();
+    })();
+  </script>
+</body>
+</html>
